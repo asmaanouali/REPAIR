@@ -43,6 +43,34 @@ async def test_create_scan_without_source_path_returns_queued(authed: AsyncClien
     assert findings.json() == []
 
 
+async def test_git_project_scan_uses_git_url_without_source_path(
+        authed: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    enqueued: list[tuple[str, tuple[object, ...]]] = []
+
+    async def fake_enqueue(name: str, *args: object) -> None:
+        enqueued.append((name, args))
+
+    monkeypatch.setattr("irsam_api.routers.scans.enqueue", fake_enqueue)
+    project = await authed.post("/projects", json={
+        "name": "git-demo",
+        "source_type": "git",
+        "git_url": "https://github.com/example/repo.git",
+        "default_branch": "main",
+    })
+    assert project.status_code == 201, project.text
+
+    r = await authed.post(
+        f"/projects/{project.json()['id']}/scans",
+        json={"trigger": "manual"},
+    )
+    assert r.status_code == 201, r.text
+    scan_id = r.json()["id"]
+    assert enqueued == [(
+        "run_git_scan",
+        (scan_id, "https://github.com/example/repo.git", "main"),
+    )]
+
+
 async def test_finding_state_transition_and_patches_roundtrip(
         authed: AsyncClient) -> None:
     pid = await _make_project(authed)

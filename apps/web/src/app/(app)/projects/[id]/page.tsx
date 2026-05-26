@@ -79,22 +79,29 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Trigger a scan</CardTitle>
-            <CardDescription>Run the IR-SAM pipeline against a local path on the worker host.</CardDescription>
+            <CardDescription>
+              {p.source_type === "git"
+                ? "Clone the Git repository into the worker workspace, or scan a local override path."
+                : "Run the IR-SAM pipeline against a local path on the worker host."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Label htmlFor="path">Source path</Label>
             <div className="flex gap-2">
               <Input id="path" value={sourcePath} onChange={(e) => setSourcePath(e.target.value)}
-                placeholder="/srv/repos/acme-payments  (leave blank for empty placeholder scan)"
+                placeholder={p.source_type === "git"
+                  ? "Optional local override; leave blank to clone the Git URL"
+                  : "/srv/repos/acme-payments  (leave blank for empty placeholder scan)"}
                 className="font-mono" />
               <Button onClick={() => startScan.mutate()} disabled={startScan.isPending}>
                 {startScan.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Play className="h-4 w-4" />Start</>}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Tip: for Git projects, the worker will clone <span className="font-mono">{p.git_url ?? "—"}</span>
-              {p.default_branch ? <> @ <span className="font-mono">{p.default_branch}</span></> : null} into a temporary
-              directory in a future release. Until then, point to an existing path on disk.
+              {p.source_type === "git" ? <>
+                Leave the path blank to clone <span className="font-mono">{p.git_url ?? "—"}</span>
+                {p.default_branch ? <> @ <span className="font-mono">{p.default_branch}</span></> : null} into the worker workspace.
+              </> : "Leave blank only if you want to create a queued placeholder scan."}
             </p>
           </CardContent>
         </Card>

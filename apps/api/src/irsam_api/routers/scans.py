@@ -50,12 +50,17 @@ async def _get_scan(session, scan_id: str, user_id: str) -> Scan:
 async def create_scan(project_id: str, payload: ScanCreate,
                        user: CurrentUser, session: DBSession) -> Scan:
     proj = await _get_project(session, project_id, user.id)
+    if not payload.source_path and proj.source_type == "git" and not proj.git_url:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                            detail="git_url_required")
     scan = Scan(project_id=proj.id, status="queued", trigger=payload.trigger)
     session.add(scan)
     await session.commit()
     await session.refresh(scan)
     if payload.source_path:
         await enqueue("run_scan", scan.id, payload.source_path)
+    elif proj.source_type == "git" and proj.git_url:
+        await enqueue("run_git_scan", scan.id, proj.git_url, proj.default_branch)
     return scan
 
 

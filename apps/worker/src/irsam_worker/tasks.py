@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import asyncio
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from arq.connections import RedisSettings
+from dulwich import porcelain
+from dulwich.repo import Repo
 from sqlalchemy import select
 
 from core.api import (
@@ -121,6 +125,71 @@ async def run_scan(ctx: dict[str, Any], scan_id: str, root_path: str) -> dict[st
     return summary
 
 
+def _clone_git_repo(git_url: str, branch: str | None, target: Path) -> str | None:
+    parsed = urlparse(git_url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("unsupported_git_url")
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        shutil.rmtree(target)
+
+    kwargs: dict[str, Any] = {"checkout": True, "depth": 1}
+    if branch:
+        kwargs["branch"] = branch.encode("utf-8")
+    porcelain.clone(git_url, str(target), **kwargs)
+
+    try:
+        return Repo(str(target)).head().decode("ascii")
+    except Exception:  # noqa: BLE001 - commit sha is useful but non-critical
+        return None
+
+
+async def run_git_scan(
+    ctx: dict[str, Any],
+    scan_id: str,
+    git_url: str,
+    branch: str | None = None,
+) -> dict[str, Any]:
+    """Clone ``git_url`` into the scan workspace, then run a normal scan."""
+    settings = get_settings()
+    checkout = settings.workspace_dir / "git" / scan_id
+    await _set_scan_status(
+        scan_id,
+        "running",
+        started_at=datetime.now(timezone.utc),
+        stats={"phase": "cloning", "git_url": git_url, "branch": branch},
+    )
+    try:
+        loop = asyncio.get_running_loop()
+        commit_sha = await loop.run_in_executor(
+            None, lambda: _clone_git_repo(git_url, branch, checkout)
+        )
+    except Exception as exc:  # noqa: BLE001 - boundary
+        log.error("git_clone_failed", scan_id=scan_id, git_url=git_url,
+                  branch=branch, error=repr(exc))
+        await _set_scan_status(
+            scan_id,
+            "failed",
+            finished_at=datetime.now(timezone.utc),
+            stats={"error": repr(exc), "git_url": git_url, "branch": branch},
+        )
+        raise
+
+    await _set_scan_status(
+        scan_id,
+        "running",
+        commit_sha=commit_sha,
+        stats={
+            "phase": "scanning",
+            "git_url": git_url,
+            "branch": branch,
+            "checkout": str(checkout),
+        },
+    )
+    return await run_scan(ctx, scan_id, str(checkout))
+
+
 async def generate_patch(ctx: dict[str, Any], finding_id: str,
                          file_path: str) -> dict[str, Any]:
     loop = asyncio.get_running_loop()
@@ -188,7 +257,7 @@ async def _on_shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [run_scan, generate_patch, import_sarif_task]
+    functions = [run_scan, run_git_scan, generate_patch, import_sarif_task]
     on_startup = _on_startup
     on_shutdown = _on_shutdown
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
