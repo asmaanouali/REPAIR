@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/irsam_worker/__init__.py
+src/irsam_worker/__main__.py
+src/irsam_worker/tasks.py
+src/irsam_worker.egg-info/PKG-INFO
+src/irsam_worker.egg-info/SOURCES.txt
+src/irsam_worker.egg-info/dependency_links.txt
+src/irsam_worker.egg-info/requires.txt
+src/irsam_worker.egg-info/top_level.txt

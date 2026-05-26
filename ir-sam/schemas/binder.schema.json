@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ir-sam.org/schemas/binder.schema.json",
+  "title": "BinderCatalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dsl_version", "catalog"],
+  "properties": {
+    "dsl_version": { "enum": ["0", "1"] },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "applies_to", "parameterizing_apis", "binders"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "applies_to": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["interpreter", "host_language", "framework"],
+          "properties": {
+            "interpreter": {
+              "enum": ["sql", "shell", "html-dom", "ldap", "xpath", "template", "path", "deser"]
+            },
+            "host_language": {
+              "enum": ["java", "python", "any"]
+            },
+            "framework": { "type": "string" }
+          }
+        },
+        "placeholder_styles": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "parameterizing_apis": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "binders": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/binder" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "binder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "pattern", "rewrite", "proof_obligation"],
+      "properties": {
+        "id": { "type": "string" },
+        "doc": { "type": "string" },
+        "pattern": { "$ref": "#/$defs/pattern_node" },
+        "rewrite": { "$ref": "#/$defs/rewrite" },
+        "preconditions": {
+          "type": "array",
+          "items": { "type": ["string", "object"] }
+        },
+        "postconditions": {
+          "type": "array",
+          "items": { "type": ["string", "object"] }
+        },
+        "proof_obligation": { "type": "string" }
+      }
+    },
+    "rewrite": {
+      "oneOf": [
+        { "$ref": "#/$defs/rewrite_parameterize" },
+        { "$ref": "#/$defs/rewrite_replace_sink" },
+        { "$ref": "#/$defs/rewrite_insert_guard" }
+      ]
+    },
+    "rewrite_parameterize": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template_string"],
+      "properties": {
+        "kind": { "const": "parameterize" },
+        "template_string": { "type": "string" },
+        "bindings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/binding" }
+        }
+      }
+    },
+    "rewrite_replace_sink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "safe_api", "source_expr"],
+      "properties": {
+        "kind": { "const": "replace_sink" },
+        "safe_api": { "type": "string" },
+        "source_expr": { "type": "string" },
+        "schema_constraint": { "type": "string" },
+        "allowlist_classes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "rewrite_insert_guard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "guard_predicate", "guarded_expr"],
+      "properties": {
+        "kind": { "const": "insert_guard" },
+        "guard_predicate": { "type": "string" },
+        "guarded_expr": { "type": "string" },
+        "on_violation": { "type": "string" },
+        "base_source": { "type": "string" }
+      }
+    },
+    "pattern_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string" },
+        "bind": { "type": "string" },
+        "ctx": { "enum": ["value", "identifier", "fragment", "structural", "opaque", "path"] },
+        "sem_in": {
+          "type": "array",
+          "items": { "enum": ["string", "integer", "decimal", "boolean", "date", "blob", "enum", "bytes", "path"] }
+        },
+        "card": { "enum": ["one", "many.bounded", "many.unbounded"] },
+        "lit": { "type": "string" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/pattern_node" }
+        }
+      }
+    },
+    "binding": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["host_expr", "api"],
+          "properties": {
+            "param_index": { "type": ["integer", "string"] },
+            "host_expr": { "type": "string" },
+            "api": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "bind_target", "allowlist_source", "on_miss"],
+          "properties": {
+            "kind": { "const": "allowlist_lookup" },
+            "bind_target": { "type": "string" },
+            "allowlist_source": { "type": "string" },
+            "on_miss": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

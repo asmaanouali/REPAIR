@@ -1,0 +1,112 @@
+# docker-compose profiles
+# ------------------------
+#   dev     : day-to-day Python dev shell.
+#   eval    : adds CodeQL + Semgrep + Maven; used by the eval harness.
+#   oracle  : adds the per-interpreter DB sandboxes for the deep
+#             differential oracle (MySQL, Postgres, OpenLDAP, XPath/Saxon).
+#
+# Examples:
+#   docker compose --profile dev     run --rm dev bash
+#   docker compose --profile eval    run --rm eval pytest -m "integration and not slow"
+#   docker compose --profile oracle  up -d
+#   docker compose --profile oracle  run --rm eval pytest -m differential
+
+services:
+  dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      target: dev
+    image: ir-sam:dev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    environment:
+      - PYTHONPATH=/workspace
+    command: bash
+
+  eval:
+    profiles: ["eval"]
+    build:
+      context: .
+      target: eval
+    image: ir-sam:eval
+    volumes:
+      - .:/workspace
+      - codeql-cache:/root/.codeql
+    working_dir: /workspace
+    environment:
+      - PYTHONPATH=/workspace
+      - IRSAM_CORPUS_CACHE=/workspace/bench/.cache
+    command: bash
+
+  # ----- Differential-oracle DB sandboxes (Phase 2+) -----
+  mysql:
+    profiles: ["oracle"]
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: irsam
+      MYSQL_DATABASE: irsam_test
+    ports: ["3306:3306"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-pirsam"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  postgres:
+    profiles: ["oracle"]
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: irsam
+      POSTGRES_DB: irsam_test
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  openldap:
+    profiles: ["oracle"]
+    image: osixia/openldap:1.5.0
+    environment:
+      LDAP_ORGANISATION: irsam
+      LDAP_DOMAIN: irsam.local
+      LDAP_ADMIN_PASSWORD: irsam
+    ports: ["389:389"]
+
+  # ----- Per-interpreter oracle containers (Phase 4) -----
+  oracle-sql:
+    profiles: ["oracle"]
+    build: ./docker/oracle-sql
+    image: ir-sam-oracle-sql:dev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      mysql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  oracle-ldap:
+    profiles: ["oracle"]
+    build: ./docker/oracle-ldap
+    image: ir-sam-oracle-ldap:dev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - openldap
+
+  oracle-xpath:
+    profiles: ["oracle"]
+    build: ./docker/oracle-xpath
+    image: ir-sam-oracle-xpath:dev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+
+volumes:
+  codeql-cache:

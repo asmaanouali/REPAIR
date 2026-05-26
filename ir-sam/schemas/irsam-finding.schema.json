@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ir-sam.org/schemas/irsam-finding.schema.json",
+  "title": "IRSAMFinding",
+  "description": "Unified, detector-agnostic finding record consumed by IR-SAM stage A. Normalizes CodeQL, Semgrep, and SonarQube outputs from SARIF 2.1.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "finding_id",
+    "detector",
+    "detector_rule_id",
+    "cwe",
+    "language",
+    "interpreter",
+    "location",
+    "sink",
+    "schema_version"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "finding_id": {
+      "type": "string",
+      "description": "Stable SHA-256 of (detector, detector_rule_id, file, line_start, sink.api_qualified_name)."
+    },
+    "detector": {
+      "type": "string",
+      "enum": ["codeql", "semgrep", "sonarqube", "joern", "other"]
+    },
+    "detector_rule_id": { "type": "string" },
+    "detector_version": { "type": "string" },
+    "cwe": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^CWE-[0-9]+$" },
+      "minItems": 1
+    },
+    "language": {
+      "type": "string",
+      "enum": ["java", "python"]
+    },
+    "interpreter": {
+      "type": "string",
+      "enum": ["sql", "shell", "html-dom", "ldap", "xpath", "template", "path", "xml", "other"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["info", "low", "medium", "high", "critical"]
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "line_start"],
+      "properties": {
+        "file": { "type": "string" },
+        "line_start": { "type": "integer", "minimum": 1 },
+        "line_end": { "type": "integer", "minimum": 1 },
+        "column_start": { "type": "integer", "minimum": 1 },
+        "column_end": { "type": "integer", "minimum": 1 },
+        "function": { "type": "string" },
+        "method_signature": { "type": "string" }
+      }
+    },
+    "sink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api_qualified_name", "tainted_arg_indices"],
+      "properties": {
+        "api_qualified_name": {
+          "type": "string",
+          "description": "Fully-qualified API name, e.g. 'java.sql.Statement.executeQuery(java.lang.String)'."
+        },
+        "tainted_arg_indices": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 },
+          "minItems": 1
+        }
+      }
+    },
+    "taint_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["api_qualified_name"],
+        "properties": {
+          "api_qualified_name": { "type": "string" },
+          "location": { "$ref": "#/properties/location" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snippet": { "type": "string" },
+        "full_message": { "type": "string" },
+        "sarif_blob_sha256": { "type": "string" }
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "dedup_key": {
+      "type": "string",
+      "description": "Stable cross-detector key for merging findings that refer to the same sink occurrence."
+    }
+  }
+}

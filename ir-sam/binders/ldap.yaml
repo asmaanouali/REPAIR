@@ -1,0 +1,55 @@
+dsl_version: "0"
+catalog:
+  id: ldap
+  version: 0.1.0
+  applies_to:
+    interpreter: ldap   # RFC 4515 search filters
+    host_language: any
+    framework: jndi|ldap3|python-ldap
+  parameterizing_apis:
+    # LDAP has no "prepared statement" --- mitigation is *value escaping*
+    # per RFC 4515 §3 plus DN escaping per RFC 4514. We model the escape
+    # helpers as the "parameterizing API".
+    - org.owasp.esapi.Encoder.encodeForLDAP
+    - org.owasp.esapi.Encoder.encodeForDN
+    - ldap3.utils.conv.escape_filter_chars
+    - ldap.filter.escape_filter_chars
+  binders:
+    - id: ldap-eq-value
+      pattern:
+        kind: LdapEquality
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        template_string: "({a}={v.escaped})"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_ldap_escape($v) }}"
+      proof_obligation: "Lemma 1' (LDAP value escaping closure: RFC4515 §3 escapes \\ * ( ) NUL)."
+
+    - id: ldap-substring
+      pattern:
+        kind: LdapSubstring
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        template_string: "({a}=*{v.escaped}*)"
+      proof_obligation: "Lemma 1'."
+
+    - id: ldap-attr-ident
+      pattern:
+        kind: LdapEquality
+        children:
+          - { kind: Hole, ctx: identifier, bind: a }
+          - { kind: Token, lit: "=" }
+          - { kind: Hole, ctx: value, bind: v }
+      preconditions:
+        - allowlist_present: $a
+      rewrite:
+        template_string: "({a.guarded}={v.escaped})"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_ldap_escape($v) }}"
+      proof_obligation: "Lemma 2 (Identifier allow-list closure)."

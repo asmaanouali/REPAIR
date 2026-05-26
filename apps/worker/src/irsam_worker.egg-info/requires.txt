@@ -1,0 +1,2 @@
+irsam-api
+arq>=0.26

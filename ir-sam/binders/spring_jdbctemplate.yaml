@@ -1,0 +1,101 @@
+dsl_version: "0"
+catalog:
+  id: spring-jdbctemplate
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: java
+    framework: spring-jdbctemplate
+  parameterizing_apis:
+    - varargs:Object[]
+    - MapSqlParameterSource.addValue
+    - org.springframework.jdbc.core.JdbcTemplate.queryForObject
+    - org.springframework.jdbc.core.JdbcTemplate.queryForList
+    - org.springframework.jdbc.core.JdbcTemplate.queryForMap
+    - org.springframework.jdbc.core.JdbcTemplate.query
+    - org.springframework.jdbc.core.JdbcTemplate.update
+    - org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate.queryForObject
+    - org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate.queryForList
+    - org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate.update
+  binders:
+    - id: spring-jdbc-positional-eq
+      doc: |
+        JdbcTemplate accepts SQL with `?` placeholders and an Object[]
+        varargs. We rewrite "WHERE col = '" + v + "'" to
+        "WHERE col = ?" and append v as a varargs argument.
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = ?"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "varargs:Object[]"
+      preconditions:
+        - host_has_jdbctemplate_in_scope
+        - sql_argument_is_first_positional
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: spring-jdbc-positional-like
+      pattern:
+        kind: LikeExpr
+        children:
+          - kind: Column
+            bind: col
+          - lit: "LIKE"
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string]
+            bind: v
+      rewrite:
+        template_string: "{col} LIKE ?"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "varargs:Object[]"
+      preconditions:
+        - host_has_jdbctemplate_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: spring-named-eq
+      doc: |
+        NamedParameterJdbcTemplate uses ":name" placeholders and a
+        MapSqlParameterSource (or plain Map<String,?>). We rewrite
+        "col = '" + v + "'" to "col = :p_{n}" and add a
+        MapSqlParameterSource.addValue("p_{n}", v).
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = :p_{$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "MapSqlParameterSource.addValue"
+      preconditions:
+        - host_has_named_jdbctemplate_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."

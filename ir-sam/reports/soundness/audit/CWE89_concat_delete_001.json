@@ -1,0 +1,26 @@
+{
+  "case_id": "CWE89_concat_delete_001",
+  "counterexamples": [],
+  "predicates": [
+    {
+      "name": "P1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "P2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "P3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "name": "P4",
+      "passed": true,
+      "reasons": []
+    }
+  ]
+}

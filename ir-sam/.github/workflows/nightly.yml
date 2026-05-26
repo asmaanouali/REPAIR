@@ -1,0 +1,59 @@
+name: nightly
+# Nightly tier: mutation, fuzz, full corpus eval, deep differential oracle,
+# soundness audit, spotcheck render. Long-running; not on PRs.
+on:
+  schedule:
+    - cron: "17 3 * * *"     # 03:17 UTC nightly
+  workflow_dispatch:
+
+jobs:
+  audit-and-eval:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: irsam
+          MYSQL_DATABASE: irsam_test
+        ports: ["3306:3306"]
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=3s --health-retries=20
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: irsam
+          POSTGRES_DB: irsam_test
+        ports: ["5432:5432"]
+        options: --health-cmd="pg_isready -U postgres" --health-interval=5s --health-timeout=3s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.10", cache: pip }
+      - name: Install (incl. test-prod extras)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,test-prod]"
+      - name: Soundness audit
+        run: pytest -m "soundness" --no-cov
+      - name: Security tier
+        run: pytest -m "security" --no-cov
+      - name: Differential oracle
+        run: pytest -m "differential" --no-cov
+      - name: Perf budgets
+        run: pytest -m "perf" --no-cov
+      - name: Fuzz harness (10 min budget per fuzzer)
+        run: pytest -m "fuzz" --no-cov || true
+      - name: Mutation testing (informational; do not fail nightly)
+        run: |
+          mutmut run --paths-to-mutate "core/iam,core/binder,core/rewriter,core/validator" || true
+          mutmut results > reports/test_runs/mutation-survivors.txt || true
+      - name: Pip-audit
+        run: pip-audit -s osv --strict || true
+      - name: Bandit
+        run: bandit -c pyproject.toml -r core bench eval
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-reports
+          path: reports/

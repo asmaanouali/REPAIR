@@ -1,0 +1,97 @@
+dsl_version: "0"
+catalog:
+  id: django-orm
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: python
+    framework: django-orm
+  parameterizing_apis:
+    - django.db.models.QuerySet.filter           # preferred ORM-native form
+    - django.db.models.QuerySet.exclude
+    - django.db.models.Manager.raw               # params= keyword
+    - django.db.connection.cursor.execute        # params positional
+  binders:
+    - id: django-extra-where-concat-to-filter
+      doc: |
+        QuerySet.extra(where=["col = '" + v + "'"]) is the classic
+        Django SQLi shape. Where the column reference is a static
+        identifier known to the ORM, the preferred rewrite is the
+        ORM-native `.filter(col=v)`; otherwise we fall back to the
+        `.extra(where=["col = %s"], params=[v])` form which uses the
+        DB-API parameter machinery.
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: ".filter({col}=%s)"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "django.db.models.QuerySet.filter"
+      preconditions:
+        - host_has_queryset_in_scope
+        - col_is_static_field_of_model
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness, Django ORM compiler)."
+
+    - id: django-raw-concat-to-params
+      doc: |
+        QuerySet.raw("SELECT ... WHERE col = %s" % v) is the
+        format-string anti-pattern. Rewrite to
+        QuerySet.raw("SELECT ... WHERE col = %s", params=[v]).
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = %s"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "django.db.models.Manager.raw"
+      preconditions:
+        - host_has_manager_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness, DB-API params)."
+
+    - id: django-cursor-execute-concat-to-params
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = %s"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "django.db.connection.cursor.execute"
+      preconditions:
+        - host_has_cursor_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness, DB-API)."

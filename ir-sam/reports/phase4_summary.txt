@@ -1,0 +1,16 @@
+IR-SAM Phase 4 acceptance evaluation
+==================================================
+Total cases:        21
+Patched (expected): 21
+Patched (passed):   21
+Patch pass rate:    100.00%
+Residual CWE:       0
+
+By language:
+  python   n= 15  patched= 15  safe= 15
+  jsts     n=  6  patched=  6  safe=  6
+
+Attack corpus: {'sql': 13, 'ldap': 6, 'xpath': 4, 'benign_string': 8, 'benign_int': 5}
+Disambiguator: HeuristicPolicy
+
+Verdict: PASS

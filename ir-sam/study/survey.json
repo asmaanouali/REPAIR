@@ -1,0 +1,75 @@
+{
+  "survey": {
+    "title": "IR-SAM blinded developer study",
+    "version": "1.0",
+    "estimated_minutes": 40,
+    "blocks": [
+      {
+        "id": "consent",
+        "type": "consent",
+        "required": true,
+        "text": "See protocol \u00a78 / IRB \u00a78 for full consent text.",
+        "items": [
+          {"id": "age18", "label": "I am at least 18 years old", "type": "checkbox"},
+          {"id": "consent", "label": "I consent to participate", "type": "checkbox"}
+        ]
+      },
+      {
+        "id": "demographics",
+        "type": "demographics",
+        "items": [
+          {"id": "years_eng", "label": "Years of professional SWE experience",
+           "type": "single_choice", "options": ["0-2","3-5","6-10","11-15","16+"]},
+          {"id": "years_sec", "label": "Years of appsec / security review experience",
+           "type": "single_choice", "options": ["0","1-2","3-5","6+"]},
+          {"id": "langs", "label": "Languages you read fluently",
+           "type": "multi_choice",
+           "options": ["Java","Python","JavaScript/TypeScript","C/C++","Go","Other"]},
+          {"id": "tz", "label": "Time-zone (UTC offset)", "type": "single_choice",
+           "options": ["UTC-12..-9","UTC-8..-5","UTC-4..-1","UTC..+3","UTC+4..+8","UTC+9..+12"]}
+        ]
+      },
+      {
+        "id": "triplets",
+        "type": "patch_triplet_loop",
+        "repeat": 6,
+        "blinded_conditions": ["A","B","C"],
+        "items_per_condition": [
+          {"id": "correctness", "label": "This patch correctly removes the vulnerability.",
+           "type": "likert5",
+           "scale": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"]},
+          {"id": "preservation", "label": "This patch preserves the original behavior on benign inputs.",
+           "type": "likert5",
+           "scale": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"]},
+          {"id": "clarity", "label": "I would accept this patch in a code review.",
+           "type": "likert5",
+           "scale": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"]},
+          {"id": "ship", "label": "I would ship this patch to production on Monday.",
+           "type": "likert5",
+           "scale": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"]},
+          {"id": "comment", "label": "Optional free-text comment.",
+           "type": "free_text", "max_chars": 500}
+        ]
+      },
+      {
+        "id": "abstention_block",
+        "type": "abstention_review",
+        "items": [
+          {"id": "abst_legit", "label": "Considering the cases where tool X declined to patch, do you agree the case is genuinely irreparable by a single-file rewrite?",
+           "type": "likert5",
+           "scale": ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"]}
+        ]
+      },
+      {
+        "id": "exit",
+        "type": "exit",
+        "items": [
+          {"id": "distress", "label": "Did any of the code excerpts cause distress?",
+           "type": "yes_no_skip"},
+          {"id": "free_feedback", "label": "Anything else?",
+           "type": "free_text", "max_chars": 1000}
+        ]
+      }
+    ]
+  }
+}

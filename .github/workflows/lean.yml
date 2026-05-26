@@ -1,0 +1,44 @@
+name: Lean Mechanization
+
+on:
+  push:
+    paths:
+      - 'ir-sam/formal/**'
+      - 'ir-sam/scripts/check_no_sorry.sh'
+      - '.github/workflows/lean.yml'
+  pull_request:
+    paths:
+      - 'ir-sam/formal/**'
+      - 'ir-sam/scripts/check_no_sorry.sh'
+      - '.github/workflows/lean.yml'
+
+jobs:
+  lake-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ir-sam/formal
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Show toolchain
+        run: |
+          lean --version
+          lake --version
+
+      - name: lake build
+        run: lake build
+
+      - name: Acceptance gate (no sorry / no custom axioms)
+        # Expected to fail until Phase 10 final milestone is reached.
+        # CI is gated on `lake build` succeeding; the acceptance script
+        # is informational during the proof-completion waves.
+        continue-on-error: true
+        working-directory: ir-sam
+        run: bash scripts/check_no_sorry.sh

@@ -1,0 +1,38 @@
+dsl_version: "1"
+catalog:
+  id: python-subprocess
+  version: 0.1.0
+  applies_to:
+    interpreter: shell
+    host_language: python
+    framework: subprocess
+  parameterizing_apis:
+    - subprocess.run
+    - subprocess.call
+    - subprocess.check_call
+    - subprocess.check_output
+    - subprocess.Popen
+  binders:
+    - id: shell-argv-list
+      pattern:
+        kind: Argv
+        children:
+          - { kind: AnyMix }     # informational; the rewriter matches by SIG shape
+      rewrite:
+        kind: parameterize
+        template_string: "{argv_list}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$argv.items"
+            api: "subprocess.run"
+      preconditions:
+        - shell_false_safe        # the safe rewrite explicitly sets shell=False
+      postconditions:
+        - structural_value_via_argv_vector
+      proof_obligation: |
+        Lemma 1 (Parameter Inertness, shell variant): when ``shell=False``
+        is used with a list ``argv``, each element is passed to the
+        ``execve`` syscall as a single argv slot. The shell lexer is
+        never invoked on attacker bytes, so no new tokens can appear
+        in the program's word list. Formal version:
+        ``IRSAM.Soundness.Shell.argv_inertness``.

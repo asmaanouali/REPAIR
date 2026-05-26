@@ -1,0 +1,283 @@
+{
+  "summary": {
+    "total": 21,
+    "patched_expected": 21,
+    "patched_passed": 21,
+    "patch_pass_rate": 1.0,
+    "residual_cwe": 0,
+    "by_language": {
+      "python": {
+        "n": 15,
+        "patched": 15,
+        "safe": 15
+      },
+      "jsts": {
+        "n": 6,
+        "patched": 6,
+        "safe": 6
+      }
+    },
+    "attack_corpus_size": {
+      "sql": 13,
+      "ldap": 6,
+      "xpath": 4,
+      "benign_string": 8,
+      "benign_int": 5
+    },
+    "disambiguator": "HeuristicPolicy"
+  },
+  "rows": [
+    {
+      "file": "reports\\phase4_bench\\py-sql-concat_00.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-concat_01.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-concat_02.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-fstring_00.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-fstring",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-fstring_01.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-fstring",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-fstring_02.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-fstring",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-pctfmt_00.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-pctfmt",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-pctfmt_01.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-pctfmt",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-sql-pctfmt_02.py",
+      "language": "python",
+      "interpreter": "sql",
+      "category": "py-sql-pctfmt",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-ldap-eq_00.py",
+      "language": "python",
+      "interpreter": "ldap",
+      "category": "py-ldap-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-ldap-eq_01.py",
+      "language": "python",
+      "interpreter": "ldap",
+      "category": "py-ldap-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-ldap-eq_02.py",
+      "language": "python",
+      "interpreter": "ldap",
+      "category": "py-ldap-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-xpath-eq_00.py",
+      "language": "python",
+      "interpreter": "xpath",
+      "category": "py-xpath-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-xpath-eq_01.py",
+      "language": "python",
+      "interpreter": "xpath",
+      "category": "py-xpath-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\py-xpath-eq_02.py",
+      "language": "python",
+      "interpreter": "xpath",
+      "category": "py-xpath-eq",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\js-sql-concat_00.js",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "js-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\js-sql-concat_01.js",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "js-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\js-sql-concat_02.js",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "js-sql-concat",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\ts-sql-template_00.ts",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "ts-sql-template",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\ts-sql-template_01.ts",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "ts-sql-template",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    },
+    {
+      "file": "reports\\phase4_bench\\ts-sql-template_02.ts",
+      "language": "jsts",
+      "interpreter": "sql",
+      "category": "ts-sql-template",
+      "expected": "patched",
+      "stage_reached": "G",
+      "abstention": null,
+      "patched": true,
+      "oracle_safe": true,
+      "residual_cwe": 0
+    }
+  ]
+}

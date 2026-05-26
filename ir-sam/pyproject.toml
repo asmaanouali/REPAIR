@@ -1,0 +1,148 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ir-sam"
+version = "0.0.1"
+description = "Intent-Reconstructive Secure API Migration"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "IR-SAM authors" }]
+dependencies = [
+    "jsonschema>=4.21",
+    "pyyaml>=6.0",
+    "lark>=1.1",
+    "antlr4-python3-runtime>=4.13",
+    "pydantic>=2.6",
+    "typer>=0.12",
+    "rich>=13.7",
+    "requests>=2.31",
+    "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pytest-xdist>=3.5",
+    "pytest-timeout>=2.3",
+    "pytest-benchmark>=4.0",
+    "hypothesis>=6.100",
+    "mypy>=1.10",
+    "ruff>=0.4",
+    "black>=24.4",
+    "pre-commit>=3.7",
+]
+test-prod = [
+    "mutmut>=2.4",
+    "pip-audit>=2.7",
+    "bandit>=1.7",
+    "cyclonedx-bom>=4.4",
+    "vcrpy>=6.0",
+    "psutil>=5.9",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+]
+# Optional ML stack for the Stage-D disambiguator (Phase 4).
+# Installing this group enables `core.disambig.ModelPolicy`. The pipeline
+# transparently falls back to `HeuristicPolicy` when this group is absent.
+model = [
+    "transformers>=4.40",
+    "torch>=2.2",
+    "accelerate>=0.30",
+    "datasets>=2.18",
+    "peft>=0.10",
+    "safetensors>=0.4",
+]
+
+[tool.setuptools.packages.find]
+include = ["core*", "eval*", "bench*", "baselines*"]
+
+[project.scripts]
+irsam = "core.cli:app"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "B", "UP", "SIM", "PL"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=core",
+    "--cov=bench",
+    "--cov=eval",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=xml:reports/test_runs/coverage.xml",
+    "--cov-report=html:reports/test_runs/htmlcov",
+    "--junitxml=reports/test_runs/junit.xml",
+    "--timeout=60",
+    "--timeout-method=thread",
+]
+testpaths = ["tests"]
+markers = [
+    "unit: fast, hermetic unit tests (default tier)",
+    "property: Hypothesis property-based tests",
+    "integration: cross-module integration tests",
+    "e2e: end-to-end pipeline tests (A..G on synthetic corpus)",
+    "differential: differential-oracle tests requiring DB containers",
+    "perf: performance/regression-budget tests",
+    "security: adversarial / robustness / supply-chain tests",
+    "soundness: mechanized soundness-audit tests",
+    "mutation: mutation-testing harness tests",
+    "fuzz: fuzzing harness tests",
+    "slow: takes > 10s; excluded from the 'fast' tier",
+    "requires_docker: requires docker / docker-compose to be available",
+    "requires_corpus: requires a real-world corpus download (Vul4J, BigVul, ...)",
+    "requires_llm: requires LLM API access or recorded cassettes",
+]
+filterwarnings = [
+    "error",
+    # third-party deprecations we don't own
+    "ignore::DeprecationWarning:antlr4.*",
+    "ignore::DeprecationWarning:pydantic.*",
+    # ResourceWarning depends on GC timing and tempfile handle ordering on
+    # Windows; not a correctness signal for our pipeline.
+    "ignore::ResourceWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["core", "bench", "eval"]
+omit = [
+    "*/__pycache__/*",
+    "*/tests/*",
+    "*/.pytest_cache/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "\\.\\.\\.",
+]
+fail_under = 85
+precision = 2
+show_missing = true
+skip_covered = true
+
+[tool.mutmut]
+paths_to_mutate = "core/iam,core/binder,core/rewriter,core/validator"
+runner = "pytest -x -q -m 'unit or property' --no-cov"
+tests_dir = "tests"
+
+[tool.bandit]
+exclude_dirs = ["tests", ".pytest_cache", "reports"]
+skips = ["B101"]  # assert is fine in research code

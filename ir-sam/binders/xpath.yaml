@@ -1,0 +1,42 @@
+dsl_version: "0"
+catalog:
+  id: xpath
+  version: 0.1.0
+  applies_to:
+    interpreter: xpath
+    host_language: any
+    framework: javax.xml.xpath|lxml
+  parameterizing_apis:
+    # Java: XPathVariableResolver / XPathFactory bound variables.
+    # Python lxml: XPath/.xpath(query, **vars) supports $name binding.
+    - javax.xml.xpath.XPath.setXPathVariableResolver
+    - javax.xml.xpath.XPathExpression.evaluate
+    - lxml.etree.XPath.__call__
+  binders:
+    - id: xpath-eq-value
+      pattern:
+        kind: XPathPredicateEq
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string, integer], bind: v }
+      rewrite:
+        template_string: "@{a}=$v_{v.idx}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "{{ choose_xpath_variable_binding($v) }}"
+      proof_obligation: "Lemma 1 (Parameter inertness via XPath variable binding)."
+
+    - id: xpath-contains
+      pattern:
+        kind: XPathFnContains
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        template_string: "contains(@{a}, $v_{v.idx})"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "{{ choose_xpath_variable_binding($v) }}"
+      proof_obligation: "Lemma 1."

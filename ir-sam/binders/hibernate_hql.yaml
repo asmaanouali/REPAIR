@@ -1,0 +1,68 @@
+dsl_version: "0"
+catalog:
+  id: hibernate-hql
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: java
+    framework: hibernate-hql
+  parameterizing_apis:
+    - org.hibernate.Session.createQuery
+    - org.hibernate.query.Query.setParameter
+  binders:
+    - id: hql-where-eq-to-named-param
+      doc: |
+        Hibernate HQL accepts named parameters of the form `:name`
+        bound via Query.setParameter("name", value). The canonical
+        SQLi anti-pattern is:
+            session.createQuery("FROM User u WHERE u.name = '" + n + "'")
+        which we rewrite to:
+            session.createQuery("FROM User u WHERE u.name = :p_0")
+                   .setParameter("p_0", n)
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = :p_{$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "org.hibernate.query.Query.setParameter"
+      preconditions:
+        - host_has_session_in_scope
+        - createQuery_call_is_immediately_chainable
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: hql-like-to-named-param
+      pattern:
+        kind: LikeExpr
+        children:
+          - kind: Column
+            bind: col
+          - lit: "LIKE"
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string]
+            bind: v
+      rewrite:
+        template_string: "{col} LIKE :p_{$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "org.hibernate.query.Query.setParameter"
+      preconditions:
+        - host_has_session_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."

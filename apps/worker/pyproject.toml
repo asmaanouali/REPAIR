@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "irsam-worker"
+version = "1.0.0"
+description = "IR-SAM Arq worker."
+requires-python = ">=3.10"
+dependencies = [
+    "irsam-api",
+    "arq>=0.26",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

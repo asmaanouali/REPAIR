@@ -1,0 +1,60 @@
+dsl_version: "0"
+catalog:
+  id: mybatis
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: java
+    framework: mybatis
+  parameterizing_apis:
+    - mybatis.placeholder.#{var}
+    # NOTE: ${var} is the *unsafe* string-interpolation form and is
+    # the syntactic anti-pattern we rewrite away.
+  binders:
+    - id: mybatis-unsafe-interp-to-prepared
+      doc: |
+        MyBatis ${var} performs raw string interpolation in mapper XML
+        or @Select-annotated interfaces and is the canonical SQLi
+        sink. The fix is to replace every `${var}` with `#{var}`,
+        which compiles to a JDBC PreparedStatement parameter. This
+        binder fires on every occurrence of ${...} in a mapper SQL
+        body, except when the host annotation explicitly suppresses
+        the rewrite via @MybatisSafeRaw.
+      pattern:
+        kind: MyBatisRawInterp
+        children:
+          - kind: Identifier
+            bind: var
+      rewrite:
+        template_string: "#{${var}}"
+        bindings: []
+      preconditions:
+        - mapper_is_xml_or_select_annotation
+        - var_not_in_safe_raw_allowlist
+      postconditions:
+        - structural_value_via_parameterized_api: $var
+      proof_obligation: "Lemma 1 (Parameter inertness, MyBatis runtime semantics)."
+
+    - id: mybatis-concat-where-eq-to-named
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = #{p_$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "mybatis.placeholder.#{var}"
+      preconditions:
+        - mapper_method_signature_can_accept_new_param
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."

@@ -1,0 +1,30 @@
+# API + worker shared image. Build context is the repo root so we can
+# COPY both ir-sam/ (research core) and apps/api + apps/worker.
+FROM python:3.11-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the research core first (heaviest, changes less often)
+COPY ir-sam /app/ir-sam
+RUN pip install -e /app/ir-sam
+
+# Then the API + worker packages
+COPY apps/api    /app/apps/api
+COPY apps/worker /app/apps/worker
+RUN pip install -e /app/apps/api[dev] -e /app/apps/worker
+
+ENV PYTHONPATH=/app/ir-sam
+
+EXPOSE 8000
+
+# Default command: run migrations then start the API.
+CMD ["sh", "-c", "cd /app/apps/api && alembic upgrade head && uvicorn irsam_api.main:app --host 0.0.0.0 --port 8000"]

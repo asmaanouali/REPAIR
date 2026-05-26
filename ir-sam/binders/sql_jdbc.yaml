@@ -1,0 +1,128 @@
+dsl_version: "0"
+catalog:
+  id: sql-jdbc
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: java
+    framework: jdbc
+  parameterizing_apis:
+    - java.sql.PreparedStatement.setString
+    - java.sql.PreparedStatement.setInt
+    - java.sql.PreparedStatement.setLong
+    - java.sql.PreparedStatement.setBigDecimal
+    - java.sql.PreparedStatement.setBoolean
+    - java.sql.PreparedStatement.setDate
+    - java.sql.PreparedStatement.setTimestamp
+    - java.sql.PreparedStatement.setObject
+  binders:
+    - id: sql-eq-value
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = ?"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "{{ choose_setter($v.sem) }}"
+      preconditions:
+        - host_has_connection_in_scope
+        - jdbc_imports_available_or_addable
+      postconditions:
+        - resource_managed_try_with_resources
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: sql-like-value
+      pattern:
+        kind: LikeExpr
+        children:
+          - kind: Column
+            bind: col
+          - lit: "LIKE"
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string]
+            bind: v
+      rewrite:
+        template_string: "{col} LIKE ?"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: java.sql.PreparedStatement.setString
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: sql-in-list
+      pattern:
+        kind: InExpr
+        children:
+          - kind: Column
+            bind: col
+          - lit: "IN"
+            kind: Token
+          - kind: Hole
+            ctx: value
+            card: many.bounded
+            bind: vs
+      rewrite:
+        template_string: "{col} IN ({{ placeholders($vs) }})"
+        bindings:
+          - param_index: $auto
+            host_expr: "$vs.host_expr_iter"
+            api: "{{ choose_setter($vs.sem) }}"
+      preconditions:
+        - hole_cardinality_bounded: $vs
+      postconditions:
+        - structural_value_via_parameterized_api: $vs
+      proof_obligation: "Lemma 1 (Parameter inertness), induction step (lists)."
+
+    - id: sql-limit-offset
+      pattern:
+        kind: Limit
+        children:
+          - kind: Hole
+            ctx: value
+            sem_in: [integer]
+            bind: lim
+      rewrite:
+        template_string: "LIMIT ?"
+        bindings:
+          - param_index: $auto
+            host_expr: "$lim.host_expr"
+            api: java.sql.PreparedStatement.setInt
+      postconditions:
+        - structural_value_via_parameterized_api: $lim
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: sql-orderby-ident
+      pattern:
+        kind: OrderList
+        children:
+          - kind: Hole
+            ctx: identifier
+            sem_in: [enum]
+            bind: c
+      rewrite:
+        template_string: "ORDER BY {c}"
+        bindings:
+          - kind: allowlist_lookup
+            bind_target: c
+            allowlist_source: $c.allowlist
+            on_miss: throw_IllegalArgumentException
+      preconditions:
+        - hole_allowlist_nonempty: $c
+      postconditions:
+        - structural_identifier_via_allowlist: $c
+      proof_obligation: "Lemma 2 (Identifier allow-list closure)."

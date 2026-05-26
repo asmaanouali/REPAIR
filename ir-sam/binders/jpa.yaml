@@ -1,0 +1,77 @@
+dsl_version: "0"
+catalog:
+  id: jpa
+  version: 0.1.0
+  applies_to:
+    interpreter: sql
+    host_language: java
+    framework: jpa
+  parameterizing_apis:
+    - javax.persistence.EntityManager.createQuery
+    - javax.persistence.EntityManager.createNamedQuery
+    - jakarta.persistence.EntityManager.createQuery
+    - jakarta.persistence.EntityManager.createNamedQuery
+    - javax.persistence.Query.setParameter
+    - javax.persistence.Query.setParameter(int,Object)
+    - jakarta.persistence.Query.setParameter
+    - jakarta.persistence.Query.setParameter(int,Object)
+  binders:
+    - id: jpa-jpql-where-eq-to-named-param
+      doc: |
+        JPQL is JPA's variant of HQL. Rewrite concat-form to
+        ":pN" named parameters bound via Query.setParameter.
+        Criteria API is preferred for static-shape queries
+        (see Discussion in the paper) but rewriting concat to
+        Criteria is out of scope for this binder; we restrict to
+        the local JPQL string rewrite.
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = :p_{$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "javax.persistence.Query.setParameter"
+      preconditions:
+        - host_has_entitymanager_in_scope
+        - createQuery_call_is_immediately_chainable
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."
+
+    - id: jpa-positional
+      doc: |
+        JPA also accepts ?N positional parameters. We expose this
+        variant for projects whose code style prefers positional
+        binding (matches the JPA spec).
+      pattern:
+        kind: Comparison
+        children:
+          - kind: Column
+            bind: col
+          - lit: "="
+            kind: Token
+          - kind: Hole
+            ctx: value
+            sem_in: [string, integer, decimal, boolean, date]
+            bind: v
+      rewrite:
+        template_string: "{col} = ?{$auto}"
+        bindings:
+          - param_index: $auto
+            host_expr: "$v.host_expr"
+            api: "javax.persistence.Query.setParameter(int,Object)"
+      preconditions:
+        - host_has_entitymanager_in_scope
+      postconditions:
+        - structural_value_via_parameterized_api: $v
+      proof_obligation: "Lemma 1 (Parameter inertness)."

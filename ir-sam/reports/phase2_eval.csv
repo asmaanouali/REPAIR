@@ -1,0 +1,51 @@
+name,category,expected_outcome,stage_reached,all_gates_passed,abstention_reason
+CWE89_concat_eq_string_001,concat-eq-string,patched,G,True,
+CWE89_concat_eq_string_002,concat-eq-string,patched,G,True,
+CWE89_concat_eq_string_003,concat-eq-string,patched,G,True,
+CWE89_concat_eq_string_004,concat-eq-string,patched,G,True,
+CWE89_concat_eq_string_005,concat-eq-string,patched,G,True,
+CWE89_concat_eq_int_001,concat-eq-int,patched,G,True,
+CWE89_concat_eq_int_002,concat-eq-int,patched,G,True,
+CWE89_concat_eq_int_003,concat-eq-int,patched,G,True,
+CWE89_concat_eq_int_004,concat-eq-int,patched,G,True,
+CWE89_concat_eq_int_005,concat-eq-int,patched,G,True,
+CWE89_concat_like_001,concat-like,patched,G,True,
+CWE89_concat_like_002,concat-like,patched,G,True,
+CWE89_concat_like_003,concat-like,patched,G,True,
+CWE89_concat_like_004,concat-like,patched,G,True,
+CWE89_concat_like_005,concat-like,patched,G,True,
+CWE89_concat_in_list_001,concat-in-list,abstain,D,False,ambiguous_intent:IN-list with a single attacker-controlled hole is out of MVP scope (Phase 3 will support it).
+CWE89_concat_in_list_002,concat-in-list,abstain,D,False,ambiguous_intent:IN-list with a single attacker-controlled hole is out of MVP scope (Phase 3 will support it).
+CWE89_concat_in_list_003,concat-in-list,abstain,D,False,ambiguous_intent:IN-list with a single attacker-controlled hole is out of MVP scope (Phase 3 will support it).
+CWE89_concat_in_list_004,concat-in-list,abstain,D,False,ambiguous_intent:IN-list with a single attacker-controlled hole is out of MVP scope (Phase 3 will support it).
+CWE89_concat_in_list_005,concat-in-list,abstain,D,False,ambiguous_intent:IN-list with a single attacker-controlled hole is out of MVP scope (Phase 3 will support it).
+CWE89_concat_limit_001,concat-limit,patched,G,True,
+CWE89_concat_limit_002,concat-limit,patched,G,True,
+CWE89_concat_limit_003,concat-limit,patched,G,True,
+CWE89_concat_limit_004,concat-limit,patched,G,True,
+CWE89_concat_limit_005,concat-limit,patched,G,True,
+CWE89_concat_orderby_001,concat-orderby-ident,abstain,G,False,
+CWE89_concat_orderby_002,concat-orderby-ident,abstain,G,False,
+CWE89_concat_orderby_003,concat-orderby-ident,abstain,G,False,
+CWE89_concat_orderby_004,concat-orderby-ident,abstain,G,False,
+CWE89_concat_orderby_005,concat-orderby-ident,abstain,G,False,
+CWE89_concat_update_001,concat-update,patched,G,True,
+CWE89_concat_update_002,concat-update,patched,G,True,
+CWE89_concat_update_003,concat-update,patched,G,True,
+CWE89_concat_update_004,concat-update,patched,G,True,
+CWE89_concat_update_005,concat-update,patched,G,True,
+CWE89_concat_delete_001,concat-delete,patched,G,True,
+CWE89_concat_delete_002,concat-delete,patched,G,True,
+CWE89_concat_delete_003,concat-delete,patched,G,True,
+CWE89_concat_delete_004,concat-delete,patched,G,True,
+CWE89_concat_delete_005,concat-delete,patched,G,True,
+CWE89_concat_insert_001,concat-insert,patched,G,True,
+CWE89_concat_insert_002,concat-insert,patched,G,True,
+CWE89_concat_insert_003,concat-insert,patched,G,True,
+CWE89_concat_insert_004,concat-insert,patched,G,True,
+CWE89_concat_insert_005,concat-insert,patched,G,True,
+CWE89_stringbuilder_001,stringbuilder-concat,patched,D,False,sql0_syntax:unexpected start token '<<H0>>'
+CWE89_stringbuilder_002,stringbuilder-concat,patched,D,False,sql0_syntax:unexpected start token '<<H0>>'
+CWE89_stringbuilder_003,stringbuilder-concat,patched,D,False,sql0_syntax:unexpected start token '<<H0>>'
+CWE89_stringbuilder_004,stringbuilder-concat,patched,D,False,sql0_syntax:unexpected start token '<<H0>>'
+CWE89_stringbuilder_005,stringbuilder-concat,patched,D,False,sql0_syntax:unexpected start token '<<H0>>'

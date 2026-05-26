@@ -1,0 +1,16 @@
+# Minimal pip dependencies needed to reproduce the headline numbers.
+# Pinned to the versions actually used by the authors so a reviewer
+# building the image gets bit-identical results.
+pytest==9.0.2
+pytest-cov==7.0.0
+pytest-mock==3.15.1
+jsonschema==4.23.0
+pyyaml==6.0.2
+lark==1.2.2
+antlr4-python3-runtime==4.13.2
+pydantic==2.9.2
+typer==0.15.1
+rich==13.9.4
+requests==2.32.3
+pandas==2.2.3
+reportlab==4.4.10

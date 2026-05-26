@@ -1,0 +1,30 @@
+name: full
+# Full tier (<=30 min): fast + integration + e2e + CLI + perf-smoke.
+# Runs on every pull-request to main/develop.
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  full:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.10", cache: pip }
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Test (unit + property + integration + e2e)
+        run: pytest -m "unit or property or integration or e2e" -n auto
+      - name: Docker build (dev target)
+        uses: docker/setup-buildx-action@v3
+      - name: Build dev image
+        run: docker build --target dev -t ir-sam:dev .
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-full
+          path: reports/test_runs/

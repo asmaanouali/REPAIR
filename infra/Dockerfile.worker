@@ -1,0 +1,27 @@
+# Worker uses the API image and just overrides the command.
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+# Real detectors: Semgrep is always available; CodeQL is opt-in and
+# expected to be mounted by the operator via IRSAM_CODEQL_BIN.
+RUN pip install --no-cache-dir "semgrep>=1.78,<2"
+
+WORKDIR /app
+
+COPY ir-sam /app/ir-sam
+RUN pip install -e /app/ir-sam
+COPY apps/api    /app/apps/api
+COPY apps/worker /app/apps/worker
+RUN pip install -e /app/apps/api -e /app/apps/worker
+
+ENV PYTHONPATH=/app/ir-sam
+
+CMD ["python", "-m", "irsam_worker"]

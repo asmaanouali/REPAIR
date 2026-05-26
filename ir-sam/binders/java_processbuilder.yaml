@@ -1,0 +1,32 @@
+dsl_version: "1"
+catalog:
+  id: java-processbuilder
+  version: 0.1.0
+  applies_to:
+    interpreter: shell
+    host_language: java
+    framework: processbuilder
+  parameterizing_apis:
+    - java.lang.ProcessBuilder.<init>
+    - java.lang.ProcessBuilder.start
+    - java.lang.Runtime.exec
+  binders:
+    - id: shell-argv-list-java
+      pattern:
+        kind: Argv
+        children:
+          - { kind: AnyMix }
+      rewrite:
+        kind: parameterize
+        template_string: "new ProcessBuilder({argv_list}).start()"
+        bindings:
+          - param_index: $auto
+            host_expr: "$argv.items"
+            api: "java.lang.ProcessBuilder.<init>"
+      postconditions:
+        - structural_value_via_argv_vector
+      proof_obligation: |
+        Lemma 1 (Parameter Inertness, shell variant) for Java
+        ``ProcessBuilder(List<String>)``: each list element becomes one
+        argv slot to ``execve`` without re-tokenization by a shell.
+        Formal version: ``IRSAM.Soundness.Shell.processbuilder_inertness``.

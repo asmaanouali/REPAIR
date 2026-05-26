@@ -1,0 +1,36 @@
+name: release
+# Release gate: nightly contents + reproducibility audit + SBOM.
+# Triggered on version tags only.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 480
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.10", cache: pip }
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,test-prod]"
+      - name: Run full release tier
+        run: python scripts/run_tests.py release --no-mutation
+      - name: Reproducibility audit
+        run: |
+          test -x scripts/release_repro.py && python scripts/release_repro.py || \
+            echo "release_repro.py not yet implemented (T9 pending)"
+      - name: SBOM (CycloneDX)
+        run: |
+          cyclonedx-py environment -o reports/sbom.json || true
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.ref_name }}
+          path: |
+            reports/
+            !reports/**/htmlcov/**

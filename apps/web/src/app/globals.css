@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 28% 5%;
+    --foreground: 220 14% 92%;
+
+    --card: 222 24% 8%;
+    --card-foreground: 220 14% 92%;
+
+    --muted: 222 18% 14%;
+    --muted-foreground: 220 8% 64%;
+
+    --border: 222 14% 16%;
+    --input: 222 14% 16%;
+    --ring: 199 89% 60%;
+
+    --primary: 199 89% 60%;       /* electric cyan */
+    --primary-foreground: 222 28% 6%;
+
+    --secondary: 270 80% 65%;     /* violet */
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 199 89% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 58%;
+    --warning-foreground: 222 28% 6%;
+
+    --radius: 0.75rem;
+  }
+
+  html, body { height: 100%; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection { background: hsl(var(--primary) / 0.35); color: white; }
+}
+
+@layer utilities {
+  .glass {
+    background: linear-gradient(180deg, hsl(var(--card) / 0.7), hsl(var(--card) / 0.4));
+    backdrop-filter: blur(14px);
+    border: 1px solid hsl(var(--border));
+  }
+  .glow-ring {
+    box-shadow: 0 0 0 1px hsl(var(--ring) / 0.4),
+                0 12px 40px -12px hsl(var(--ring) / 0.5);
+  }
+  .text-gradient {
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .grid-bg {
+    background-image: radial-gradient(circle at 1px 1px, hsl(var(--border)) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+}
