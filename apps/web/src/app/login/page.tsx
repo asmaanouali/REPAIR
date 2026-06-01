@@ -12,16 +12,14 @@ import {
   Terminal,
   FileSearch,
   Network,
-  FolderTree,
-  FileCode2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { api, ApiError, type User } from "@/lib/api";
 
 const LANGUAGES = [
-  { name: "Java", versions: "8 — 21", icon: FileCode2 },
-  { name: "Python", versions: "3.8 — 3.12", icon: FileCode2 },
+  { name: "Java", versions: "8 — 21", icon: Database },
+  { name: "Python", versions: "3.8 — 3.12", icon: Database },
 ];
 
 const VULNERABILITIES: {
@@ -53,18 +51,6 @@ const VULNERABILITIES: {
     title: "XPath Injection",
     blurb: "javax.xml.xpath, lxml XPath — variable-bound expression evaluation",
     icon: FileSearch,
-  },
-  {
-    cwe: "CWE-22",
-    title: "Path Traversal",
-    blurb: "java.nio.file, Python open / pathlib / shutil — allow-list closure",
-    icon: FolderTree,
-  },
-  {
-    cwe: "CWE-1336",
-    title: "Template Injection (SSTI)",
-    blurb: "Jinja2, Flask render_template_string, Mako — autoescape + sandbox",
-    icon: FileCode2,
   },
 ];
 
@@ -213,40 +199,30 @@ function ScopePanel() {
         </ul>
       </div>
 
-      <p className="mt-6 text-center text-[11px] text-muted-foreground">
-        Out of scope by design:{" "}
-        <span className="font-mono text-foreground/70">JavaScript</span>,{" "}
-        <span className="font-mono text-foreground/70">TypeScript</span>,
-        memory-safety CWEs, architectural issues (CSRF, secret management).
-      </p>
+    
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-hero">
+    <main className="relative h-screen overflow-hidden bg-background">
       <div className="absolute inset-0 grid-bg opacity-30" />
-      <div className="absolute -top-40 left-1/2 h-[480px] w-[640px] -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center gap-6 p-6 lg:flex-row lg:items-start lg:justify-center lg:gap-10 lg:pt-24">
-        <div className="flex flex-col items-center lg:items-start lg:pt-6">
+      <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col p-6 lg:flex-row lg:gap-10">
+        <div className="flex shrink-0 flex-col justify-center lg:w-[420px] lg:py-12">
           <div className="mb-8 flex items-center gap-2">
             <ShieldCheck className="h-6 w-6 text-primary" />
             <span className="text-lg font-semibold tracking-tight">IR-SAM</span>
-            <span className="ml-2 rounded-full border border-border bg-card/60 px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="ml-2 rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
               Java · Python
             </span>
           </div>
-          <div className="w-full max-w-md">
-            <Suspense
-              fallback={<div className="glass w-full rounded-2xl p-8 h-72" />}
-            >
-              <LoginForm />
-            </Suspense>
-          </div>
+          <Suspense fallback={<div className="w-full rounded-2xl border border-border p-8 h-72" />}>
+            <LoginForm />
+          </Suspense>
         </div>
 
-        <div className="w-full max-w-xl">
+        <div className="flex-1 overflow-y-auto py-12">
           <ScopePanel />
         </div>
       </div>
