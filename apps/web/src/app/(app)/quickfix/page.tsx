@@ -108,6 +108,15 @@ export default function QuickfixPage() {
               </div>
             ) : (
               <div className="space-y-4">
+                {m.data.result.patched_source ? (
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5">Corrected code</div>
+                    <pre className="max-h-80 overflow-auto rounded-md border border-border bg-background/60 p-3 text-[11px] font-mono leading-relaxed">
+                      {m.data.result.patched_source}
+                    </pre>
+                  </div>
+                ) : null}
+
                 <div className="space-y-1.5">
                   <div className="text-xs uppercase tracking-wide text-muted-foreground">Gates</div>
                   <ul className="space-y-1">
@@ -131,15 +140,6 @@ export default function QuickfixPage() {
                     ))}
                   </ul>
                 </div>
-
-                {m.data.result.patched_source ? (
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5">Corrected code</div>
-                    <pre className="max-h-80 overflow-auto rounded-md border border-border bg-background/60 p-3 text-[11px] font-mono leading-relaxed">
-                      {m.data.result.patched_source}
-                    </pre>
-                  </div>
-                ) : null}
 
                 {m.data.result.unified_diff ? (
                   <details className="group">
