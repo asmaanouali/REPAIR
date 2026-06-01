@@ -1,0 +1,39 @@
+dsl_version: "1"
+catalog:
+  id: ldap-java
+  version: 0.1.0
+  applies_to:
+    interpreter: ldap
+    host_language: java
+    framework: jndi
+  parameterizing_apis:
+    - org.owasp.esapi.Encoder.encodeForLDAP
+    - org.owasp.esapi.Encoder.encodeForDN
+  binders:
+    - id: ldap-eq-value
+      pattern:
+        kind: LdapEquality
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        kind: parameterize
+        template_string: "({a}={v.escaped})"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_ldap_escape($v) }}"
+      proof_obligation: "Lemma 1' (LDAP value escaping closure: RFC4515 §3 escapes \\ * ( ) NUL)."
+
+    - id: ldap-substring
+      pattern:
+        kind: LdapSubstring
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        kind: parameterize
+        template_string: "({a}=*{v.escaped}*)"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_ldap_escape($v) }}"
+      proof_obligation: "Lemma 1'."

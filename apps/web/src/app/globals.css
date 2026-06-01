@@ -4,38 +4,38 @@
 
 @layer base {
   :root {
-    --background: 222 28% 5%;
-    --foreground: 220 14% 92%;
+    --background: 0 0% 98%;
+    --foreground: 220 15% 12%;
 
-    --card: 222 24% 8%;
-    --card-foreground: 220 14% 92%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 12%;
 
-    --muted: 222 18% 14%;
-    --muted-foreground: 220 8% 64%;
+    --muted: 220 10% 95%;
+    --muted-foreground: 220 8% 48%;
 
-    --border: 222 14% 16%;
-    --input: 222 14% 16%;
-    --ring: 199 89% 60%;
+    --border: 220 12% 90%;
+    --input: 220 12% 90%;
+    --ring: 217 91% 50%;
 
-    --primary: 199 89% 60%;       /* electric cyan */
-    --primary-foreground: 222 28% 6%;
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 270 80% 65%;     /* violet */
+    --secondary: 217 20% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --accent: 199 89% 60%;
+    --accent: 217 91% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 56%;
+    --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 142 70% 45%;
+    --success: 142 60% 36%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 58%;
-    --warning-foreground: 222 28% 6%;
+    --warning: 38 90% 44%;
+    --warning-foreground: 0 0% 100%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
 
   html, body { height: 100%; }
@@ -43,18 +43,16 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "cv11";
   }
-  ::selection { background: hsl(var(--primary) / 0.35); color: white; }
+  ::selection { background: hsl(var(--primary) / 0.15); color: hsl(var(--foreground)); }
 }
 
 @layer utilities {
   .glass {
-    background: linear-gradient(180deg, hsl(var(--card) / 0.7), hsl(var(--card) / 0.4));
-    backdrop-filter: blur(14px);
+    background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
   }
   .glow-ring {
-    box-shadow: 0 0 0 1px hsl(var(--ring) / 0.4),
-                0 12px 40px -12px hsl(var(--ring) / 0.5);
+    box-shadow: 0 0 0 1px hsl(var(--ring) / 0.25);
   }
   .text-gradient {
     background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));

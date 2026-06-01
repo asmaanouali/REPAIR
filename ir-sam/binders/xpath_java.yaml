@@ -1,0 +1,38 @@
+dsl_version: "1"
+catalog:
+  id: xpath-java
+  version: 0.1.0
+  applies_to:
+    interpreter: xpath
+    host_language: java
+    framework: javax.xml.xpath
+  parameterizing_apis:
+    - javax.xml.xpath.XPath.setXPathVariableResolver
+  binders:
+    - id: xpath-eq-value
+      pattern:
+        kind: XPathPredicateEq
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string, integer], bind: v }
+      rewrite:
+        kind: parameterize
+        template_string: "@{a}={v.escaped}"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_xpath_variable_binding($v) }}"
+      proof_obligation: "Lemma 1 (Parameter inertness via XPath variable binding)."
+
+    - id: xpath-contains
+      pattern:
+        kind: XPathFnContains
+        children:
+          - { kind: Attr, bind: a }
+          - { kind: Hole, ctx: value, sem_in: [string], bind: v }
+      rewrite:
+        kind: parameterize
+        template_string: "contains(@{a}, {v.escaped})"
+        bindings:
+          - host_expr: "$v.host_expr"
+            api: "{{ choose_xpath_variable_binding($v) }}"
+      proof_obligation: "Lemma 1."

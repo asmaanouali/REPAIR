@@ -31,9 +31,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Protocol
+from typing import Any, Callable, Optional, Protocol
 
 from core.phi import PatchPlan
+from core.recon import ParameterizedTemplate
 from core.rewriter import PatchResult
 from core.slicer import SliceAbstention, SliceResult
 
@@ -55,6 +56,10 @@ class _Synthesize(Protocol):
                  ) -> PatchResult: ...
 
 
+class _ParseTemplate(Protocol):
+    def __call__(self, template: ParameterizedTemplate) -> Any: ...
+
+
 @dataclass(frozen=True)
 class LanguageBackend:
     """All language-specific call-points the pipeline needs."""
@@ -65,6 +70,7 @@ class LanguageBackend:
     slice_at_sink: _SliceAtSink
     synthesize_patch: _Synthesize
     default_catalog_yaml: Path
+    parse_template: Optional[_ParseTemplate] = None
 
 
 # --- registry ----------------------------------------------------------------
@@ -119,5 +125,107 @@ def _register_defaults() -> None:
         default_catalog_yaml=_BINDERS_DIR / "sql_pydbapi.yaml",
     ))
 
+    # Python / shell (CWE-78) -------------------------------------------------
+    from core.parsers.shell import parse_shell_argv
+    from core.rewriter.shell import synthesize_python_shell_patch
+
+    register(LanguageBackend(
+        language="python",
+        interpreter="shell",
+        find_sinks=py_find_sinks,
+        slice_at_sink=py_slice,           # command is arg 0 for subprocess/os
+        synthesize_patch=synthesize_python_shell_patch,
+        default_catalog_yaml=_BINDERS_DIR / "python_subprocess.yaml",
+        parse_template=parse_shell_argv,
+    ))
+
+    # Python / LDAP (CWE-90) --------------------------------------------------
+    from core.parsers.ldap import parse_template_to_sig as parse_ldap
+    from core.rewriter.ldap import synthesize_python_ldap_patch
+
+    register(LanguageBackend(
+        language="python",
+        interpreter="ldap",
+        find_sinks=py_find_sinks,
+        slice_at_sink=_py_ldap_slice,     # filter is arg 1 (ldap3) / 2 (python-ldap)
+        synthesize_patch=synthesize_python_ldap_patch,
+        default_catalog_yaml=_BINDERS_DIR / "ldap_python.yaml",
+        parse_template=parse_ldap,
+    ))
+
+    # Python / XPath (CWE-643) ------------------------------------------------
+    from core.parsers.xpath import parse_template_to_sig as parse_xpath
+    from core.rewriter.xpath import synthesize_python_xpath_patch
+
+    register(LanguageBackend(
+        language="python",
+        interpreter="xpath",
+        find_sinks=py_find_sinks,
+        slice_at_sink=py_slice,           # query is arg 0 for Element.xpath()
+        synthesize_patch=synthesize_python_xpath_patch,
+        default_catalog_yaml=_BINDERS_DIR / "xpath_python.yaml",
+        parse_template=parse_xpath,
+    ))
+
+    # Java backends (shell/ldap/xpath) ---------------------------------------
+    from core.slicer.nonsql import (
+        find_java_ldap_sinks,
+        find_java_shell_sinks,
+        find_java_xpath_sinks,
+        slice_java_ldap,
+        slice_java_shell,
+        slice_java_xpath,
+    )
+    from core.rewriter.shell import synthesize_java_shell_patch
+    from core.rewriter.ldap import synthesize_java_ldap_patch
+    from core.rewriter.xpath import synthesize_java_xpath_patch
+
+    register(LanguageBackend(
+        language="java",
+        interpreter="shell",
+        find_sinks=find_java_shell_sinks,
+        slice_at_sink=slice_java_shell,
+        synthesize_patch=synthesize_java_shell_patch,
+        default_catalog_yaml=_BINDERS_DIR / "java_processbuilder.yaml",
+        parse_template=parse_shell_argv,
+    ))
+
+    register(LanguageBackend(
+        language="java",
+        interpreter="ldap",
+        find_sinks=find_java_ldap_sinks,
+        slice_at_sink=slice_java_ldap,
+        synthesize_patch=synthesize_java_ldap_patch,
+        default_catalog_yaml=_BINDERS_DIR / "ldap_java.yaml",
+        parse_template=parse_ldap,
+    ))
+
+    register(LanguageBackend(
+        language="java",
+        interpreter="xpath",
+        find_sinks=find_java_xpath_sinks,
+        slice_at_sink=slice_java_xpath,
+        synthesize_patch=synthesize_java_xpath_patch,
+        default_catalog_yaml=_BINDERS_DIR / "xpath_java.yaml",
+        parse_template=parse_xpath,
+    ))
+
+
+# LDAP filter argument index by sink method.
+_LDAP_FILTER_ARG = {"search": 1, "search_s": 2, "search_ext_s": 2}
+
+
+def _py_ldap_slice(src: str, sink_line: int) -> SliceResult | SliceAbstention:
+    """Slice the *filter* argument of an LDAP search sink (not arg 0)."""
+    from core.lang.python import find_sink_calls, slice_sink_argument
+
+    arg_idx = 1
+    for line, _recv, api, _text in find_sink_calls(src):
+        if line == sink_line:
+            arg_idx = _LDAP_FILTER_ARG.get(api, 1)
+            break
+    return slice_sink_argument(src, sink_line, arg_index=arg_idx)
+
 
 _register_defaults()
+

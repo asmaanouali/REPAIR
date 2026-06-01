@@ -36,6 +36,87 @@ function isBestEffort(diff: string | null | undefined): boolean {
   return !!diff && diff.includes(BEST_EFFORT_MARKER);
 }
 
+/** Translate a pipeline abstention into a human-readable title + detail. */
+function abstentionCopy(stage: string, reason: string | null | undefined): { title: string; detail: string } {
+  const r = reason ?? "";
+
+  // Stage A — language / file-level problems
+  if (stage === "A") {
+    if (r.startsWith("unsupported_backend:"))
+      return {
+        title: "Unsupported language",
+        detail: `IR-SAM has no backend registered for this language/interpreter pair (${r.replace("unsupported_backend:", "")}). Only Java and Python sources with SQL, XPath, LDAP, or shell sinks are currently supported.`,
+      };
+    if (r === "no_sink_found")
+      return {
+        title: "No injection sink found",
+        detail: "IR-SAM scanned the file but found no dangerous call sites (raw query concatenation, shell execution, etc.) matching its supported patterns.",
+      };
+    if (r === "finding_file_not_found")
+      return {
+        title: "Source file not found",
+        detail: "The file referenced by this finding does not exist on disk. It may have been moved, deleted, or the project root is misconfigured.",
+      };
+    if (r.startsWith("finding_file_unreadable"))
+      return {
+        title: "Source file unreadable",
+        detail: `The file could not be read (${r.replace("finding_file_unreadable:", "").trim()}). Check file permissions or encoding.`,
+      };
+  }
+
+  // Stage B — slicing
+  if (stage === "B")
+    return {
+      title: "Data-flow slice failed",
+      detail: `IR-SAM located the sink but could not trace the tainted data-flow path leading into it${r ? ` (${r})` : ""}. The call may be too deeply nested or use an unsupported control-flow pattern.`,
+    };
+
+  // Stage C — template reconstruction
+  if (stage === "C")
+    return {
+      title: "Template reconstruction failed",
+      detail: `The slicer produced a fragment but IR-SAM could not reconstruct a parameterized query template from it${r ? ` (${r})` : ""}. The query may be dynamically composed in a way the reconstructor cannot handle.`,
+    };
+
+  // Stage D — parsing / grammar
+  if (stage === "D") {
+    if (r.includes("ambiguous_intent"))
+      return {
+        title: "Ambiguous query intent",
+        detail: "IR-SAM extracted a query template but could not determine its structural intent (SELECT vs. INSERT vs. …). The disambiguator was consulted but did not resolve the ambiguity. A best-effort patch cannot be safely produced.",
+      };
+    if (r.includes("sql0_syntax") || r.includes("_parse:"))
+      return {
+        title: "Query template unparseable",
+        detail: `The reconstructed template does not conform to IR-SAM's supported query grammar${r ? ` (${r.split(":").slice(1).join(":").trim()})` : ""}. Inline expressions, stored-procedure calls, or dialect-specific syntax may be the cause.`,
+      };
+    return {
+      title: "Parse-stage abstention",
+      detail: `IR-SAM could not structurally parse the query at the sink${r ? ` (${r})` : ""}. The system abstains to avoid producing an incorrect fix.`,
+    };
+  }
+
+  // Stage E — binder / catalog mapping
+  if (stage === "E")
+    return {
+      title: "No safe parameterizing API found",
+      detail: `IR-SAM parsed the query successfully but could not map its holes to a safe, parameterized API from the binder catalog${r ? ` (${r})` : ""}. The framework may not be in the catalog, or the query structure is unsupported.`,
+    };
+
+  // Stage F — rewrite / synthesis
+  if (stage === "F")
+    return {
+      title: "Patch synthesis failed",
+      detail: `IR-SAM selected a parameterizing API but could not synthesize the final source rewrite${r ? ` (${r})` : ""}. The code structure at the call site may prevent automated rewriting.`,
+    };
+
+  // Fallback
+  return {
+    title: "Pipeline abstained",
+    detail: `The pipeline stopped at stage ${stage}${r ? ` with reason: ${r}` : ""}.`,
+  };
+}
+
 export default function FindingDetail({ params }: { params: { id: string } }) {
   const { id } = params;
   const qc = useQueryClient();
@@ -109,11 +190,21 @@ export default function FindingDetail({ params }: { params: { id: string } }) {
                 Waiting for the worker to generate a patch.
               </p>
             ) : !latest.unified_diff ? (
-              <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground space-y-2">
-                <p className="font-medium text-foreground">No patch generated</p>
-                <p>The pipeline reached stage <span className="font-mono">{latest.stage_reached}</span> without identifying a remediation target on this file.</p>
-                <p className="text-xs">This is expected when the file does not contain a sink in IR-SAM&apos;s supported scope.</p>
-              </div>
+              (() => {
+                const { title, detail } = abstentionCopy(latest.stage_reached, latest.plan?.abstention_reason);
+                return (
+                  <div className="rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground space-y-2">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-foreground">{title}</p>
+                      <span className="font-mono text-xs bg-muted text-muted-foreground rounded px-1.5 py-0.5">stage {latest.stage_reached}</span>
+                    </div>
+                    <p>{detail}</p>
+                    {latest.plan?.abstention_reason && (
+                      <p className="text-xs font-mono bg-muted rounded px-2 py-1 break-all">{latest.plan.abstention_reason}</p>
+                    )}
+                  </div>
+                );
+              })()
             ) : (
               <>
                 {isBestEffort(latest.unified_diff) && (

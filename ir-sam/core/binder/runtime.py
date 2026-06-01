@@ -169,13 +169,22 @@ def _match_recursive(pattern: dict[str, Any], node: Any, bindings: dict[str, Any
 
     child_patterns = pattern.get("children")
     if child_patterns is not None:
-        # Children must match positionally; the pattern length must equal the
-        # actual children length for a strict match.
-        if len(child_patterns) != len(node.children):
-            return False
-        for cp, ch in zip(child_patterns, node.children):
-            if not _match_recursive(cp, ch, bindings):
+        # A lone ``AnyMix`` child is a *variadic* wildcard: it matches any
+        # number (including zero) of children. This lets argv-style binders
+        # (``Argv(items...)``) match regardless of how many literal/hole
+        # tokens the command skeleton produced.
+        if len(child_patterns) == 1 and child_patterns[0].get("kind") == "AnyMix":
+            bind_all = child_patterns[0].get("bind")
+            if bind_all:
+                bindings[bind_all] = node.children
+        else:
+            # Children must match positionally; the pattern length must equal
+            # the actual children length for a strict match.
+            if len(child_patterns) != len(node.children):
                 return False
+            for cp, ch in zip(child_patterns, node.children):
+                if not _match_recursive(cp, ch, bindings):
+                    return False
 
     bind_name = pattern.get("bind")
     if bind_name:

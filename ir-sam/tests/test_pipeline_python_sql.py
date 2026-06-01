@@ -81,15 +81,15 @@ def test_python_sql_unsupported_interpreter_abstains(tmp_path: Path):
     src_file = tmp_path / "x.py"
     src_file.write_text("x = 1\n", encoding="utf-8")
     f = IRSAMFinding(
-        finding_id="t-py-ldap-1",
+        finding_id="t-py-nosql-1",
         detector="semgrep",
-        detector_rule_id="python.ldap.injection",
-        cwe=("CWE-90",),
+        detector_rule_id="python.nosql.injection",
+        cwe=("CWE-943",),
         language="python",
-        interpreter="ldap",
+        interpreter="nosql",
         location=Location(file=str(src_file), line_start=1),
         sink=Sink(
-            api_qualified_name="ldap.LDAPObject.search_s",
+            api_qualified_name="pymongo.collection.Collection.find",
             tainted_arg_indices=(0,),
         ),
     )

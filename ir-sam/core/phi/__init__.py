@@ -403,6 +403,40 @@ def _render_sig(node: SIGNode, render) -> str:
         return "LIMIT " + render(node.children[0])
     if k == "Offset":
         return "OFFSET " + render(node.children[0])
+    # --- LDAP (RFC 4515) structural nodes ------------------------------------
+    if k == "LdapAnd":
+        return "(&" + "".join(render(c) for c in node.children) + ")"
+    if k == "LdapOr":
+        return "(|" + "".join(render(c) for c in node.children) + ")"
+    if k == "LdapNot":
+        return "(!" + render(node.children[0]) + ")"
+    if k == "LdapEquality":
+        attr, val = node.children
+        return f"({render(attr)}={render(val)})"
+    if k == "LdapSubstring":
+        attr, val = node.children
+        return f"({render(attr)}=*{render(val)}*)"
+    if k == "LdapPresent":
+        return f"({render(node.children[0])}=*)"
+    if k == "Attr":
+        return render(node.children[0])
+    # --- XPath structural nodes ----------------------------------------------
+    if k == "XPathPath":
+        return "/".join(render(c) for c in node.children)
+    if k == "XPathStep":
+        name = render(node.children[0])
+        if len(node.children) > 1:
+            return name + "[" + "".join(render(c) for c in node.children[1:]) + "]"
+        return name
+    if k == "XPathPredicateEq":
+        attr, val = node.children
+        return f"@{render(attr)}={render(val)}"
+    if k == "XPathFnContains":
+        attr, val = node.children
+        return f"contains(@{render(attr)}, {render(val)})"
+    if k == "XPathFnStartsWith":
+        attr, val = node.children
+        return f"starts-with(@{render(attr)}, {render(val)})"
     # fallback: render children joined by spaces
     return " ".join(render(c) for c in node.children)
 

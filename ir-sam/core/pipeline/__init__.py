@@ -244,39 +244,57 @@ def _run_source_at_sink(
 
     # Stage D
     disambig_extra: dict[str, Any] = {}
-    try:
-        lift = parse_template_to_sig(template)
-    except SQL0AmbiguousIntent as e:
-        # Stage-D ambiguous intent: call the (heuristic-or-model) disambiguator
-        # before giving up. The disambiguator picks one label from a finite,
-        # syntactically-safe label set; the parser is re-invoked with the
-        # resulting hint. If parsing still fails, we surface the original
-        # abstention but annotate the outcome with the disambiguator's
-        # decision for provenance.
-        disambig_extra = _try_disambiguate_sql_in(template)
-        hints = disambig_extra.get("disambig_hints") or {}
-        if hints:
-            try:
-                lift = parse_template_to_sig(template, disambig_hints=hints)
-            except (SQL0AmbiguousIntent, SQL0SyntaxError) as e2:
+    interp = backend.interpreter if backend is not None else "sql"
+    if (backend is not None and backend.parse_template is not None
+            and interp != "sql"):
+        # Non-SQL interpreter (shell/ldap/xpath/...): delegate Stage-D to the
+        # backend's parser. All of these parsers raise ``ValueError`` subclasses
+        # (ShellSyntaxError/ShellAmbiguousIntent, LDAPSyntaxError/..., XPath...)
+        # on syntactically-unsound or ambiguous templates; we map those to a
+        # typed Stage-D abstention (sound-or-abstain).
+        try:
+            lift = backend.parse_template(template)
+        except ValueError as e:
+            return PipelineOutcome(
+                str(path), sink_line, "D",
+                f"{interp}_parse:{e}",
+                slice_result=slice_, template=template,
+                extra=base_extra,
+            )
+    else:
+        try:
+            lift = parse_template_to_sig(template)
+        except SQL0AmbiguousIntent as e:
+            # Stage-D ambiguous intent: call the (heuristic-or-model) disambiguator
+            # before giving up. The disambiguator picks one label from a finite,
+            # syntactically-safe label set; the parser is re-invoked with the
+            # resulting hint. If parsing still fails, we surface the original
+            # abstention but annotate the outcome with the disambiguator's
+            # decision for provenance.
+            disambig_extra = _try_disambiguate_sql_in(template)
+            hints = disambig_extra.get("disambig_hints") or {}
+            if hints:
+                try:
+                    lift = parse_template_to_sig(template, disambig_hints=hints)
+                except (SQL0AmbiguousIntent, SQL0SyntaxError) as e2:
+                    return PipelineOutcome(
+                        str(path), sink_line, "D",
+                        f"ambiguous_intent_after_disambig:{e2}",
+                        slice_result=slice_, template=template,
+                        extra=_merge_extra(base_extra, disambig_extra),
+                    )
+            else:
                 return PipelineOutcome(
                     str(path), sink_line, "D",
-                    f"ambiguous_intent_after_disambig:{e2}",
+                    f"ambiguous_intent:{e}",
                     slice_result=slice_, template=template,
                     extra=_merge_extra(base_extra, disambig_extra),
                 )
-        else:
-            return PipelineOutcome(
-                str(path), sink_line, "D",
-                f"ambiguous_intent:{e}",
-                slice_result=slice_, template=template,
-                extra=_merge_extra(base_extra, disambig_extra),
-            )
-    except SQL0SyntaxError as e:
-        return PipelineOutcome(str(path), sink_line, "D",
-                               f"sql0_syntax:{e}",
-                               slice_result=slice_, template=template,
-                               extra=base_extra)
+        except SQL0SyntaxError as e:
+            return PipelineOutcome(str(path), sink_line, "D",
+                                   f"sql0_syntax:{e}",
+                                   slice_result=slice_, template=template,
+                                   extra=base_extra)
 
     # Build IAM + host_exprs map (hole names "h0","h1",... aligned with marker idx)
     host_exprs = {f"h{th.idx}": th.host_expr for th in template.holes}
@@ -310,7 +328,14 @@ def _run_source_at_sink(
                                extra=_merge_extra(base_extra, disambig_extra))
 
     # Stage G
-    original_concat, patched_oracle, param_kind = _build_oracle_templates(template, lift)
+    if interp == "sql":
+        original_concat, patched_oracle, param_kind = _build_oracle_templates(
+            template, lift)
+    else:
+        # Non-SQL interpreters have no SQLite differential oracle; the
+        # differential gate is skipped (run_all_gates only runs it when
+        # both templates are provided). Gates 1-4 remain active.
+        original_concat, patched_oracle, param_kind = None, None, "string"
     gates = run_all_gates(
         file=str(path),
         patched_source=patch.patched_source,

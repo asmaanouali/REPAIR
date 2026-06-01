@@ -149,10 +149,7 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-muted-foreground">
-        Owner credentials are configured in{" "}
-        <span className="font-mono text-foreground/80">.env</span>
-      </p>
+      
     </div>
   );
 }
