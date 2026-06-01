@@ -29,6 +29,7 @@ from core.slicer import (
     find_sink_calls,
     slice_sink_argument,
 )
+from core.slicer.project import ProjectModel
 from core.validator import GateReport, run_all_gates
 
 
@@ -79,6 +80,7 @@ def run_file(
     catalog_path: Path | str | None = None,
     allowlists: dict[str, str] | None = None,
     extra_symbols: tuple[SymbolEntry, ...] = (),
+    project: "ProjectModel | None" = None,
 ) -> PipelineOutcome:
     """Run stages A..G for the first sink in ``java_path``.
 
@@ -117,6 +119,7 @@ def run_file(
         allowlists=allowlists,
         extra_symbols=extra_symbols,
         backend=backend,
+        project=project,
     )
 
 
@@ -127,6 +130,7 @@ def run_finding(
     catalog_path: Path | str | None = None,
     allowlists: dict[str, str] | None = None,
     extra_symbols: tuple[SymbolEntry, ...] = (),
+    project: "ProjectModel | None" = None,
 ) -> PipelineOutcome:
     """Run stages A..G for one normalized detector finding.
 
@@ -171,7 +175,45 @@ def run_finding(
         extra_symbols=extra_symbols,
         extra=extra,
         backend=backend,
+        project=project,
     )
+
+
+def _slice_stage_b(
+    path: Path,
+    src: str,
+    sink_line: int,
+    backend: LanguageBackend | None,
+    project: "ProjectModel | None",
+) -> SliceResult | SliceAbstention:
+    """Stage B dispatch: global SDG slice when enabled, else local slice.
+
+    The global slicer is used for Java sources when either an explicit
+    :class:`ProjectModel` is supplied or ``IRSAM_SLICER=sdg`` is set.
+    A model is built lazily from the sink file's directory when none is
+    given. Default behaviour (no flag, no project) is unchanged.
+    """
+    import os
+
+    engine = os.environ.get("IRSAM_SLICER", "regex").strip().lower()
+    is_java = path.suffix.lower() == ".java"
+    if is_java and (engine == "sdg" or project is not None):
+        from core.framework import extract_facts
+        from core.slicer.sdg import slice_global
+
+        model = project
+        if model is None:
+            model = ProjectModel.from_root(path.parent)
+        if path not in model.files:
+            model.files[path] = src
+            model._index_source(path, src)
+        facts = extract_facts(host_language="java", source=src)
+        return slice_global(
+            model, path, sink_line, tainted_params=facts.tainted_params)
+
+    if backend is not None:
+        return backend.slice_at_sink(src, sink_line)
+    return slice_sink_argument(src, sink_line)
 
 
 def _run_source_at_sink(
@@ -184,14 +226,12 @@ def _run_source_at_sink(
     extra_symbols: tuple[SymbolEntry, ...],
     extra: dict[str, Any] | None = None,
     backend: LanguageBackend | None = None,
+    project: "ProjectModel | None" = None,
 ) -> PipelineOutcome:
     base_extra = dict(extra or {})
 
-    # Stage B
-    if backend is not None:
-        slice_ = backend.slice_at_sink(src, sink_line)
-    else:
-        slice_ = slice_sink_argument(src, sink_line)
+    # Stage B -- global (SDG) slice when enabled, else per-backend local slice.
+    slice_ = _slice_stage_b(path, src, sink_line, backend, project)
     if isinstance(slice_, SliceAbstention):
         return PipelineOutcome(str(path), sink_line, "B", slice_.reason,
                                extra=base_extra)

@@ -133,8 +133,93 @@ def catalog_path_for(profile: FrameworkProfile,
     return binders_root / f"{profile.catalog_basename}.yaml"
 
 
+# --- framework facts for global slicing --------------------------------------
+
+# Annotations / call shapes that introduce *attacker-controlled* (tainted)
+# values at a method boundary. The SDG slicer uses these to anchor the
+# backward value-flow: a parameter carrying one of these annotations, or a
+# value read through one of these calls, is a taint source.
+_JAVA_TAINT_SOURCE_ANNOS = (
+    "RequestParam", "PathVariable", "RequestBody", "RequestHeader",
+    "CookieValue", "MatrixVariable", "ModelAttribute",
+)
+_JAVA_TAINT_SOURCE_CALLS = (
+    r"\bgetParameter\s*\(", r"\bgetParameterValues\s*\(",
+    r"\bgetHeader\s*\(", r"\bgetQueryString\s*\(",
+    r"\bgetParameterMap\s*\(",
+)
+
+# Mapping/entry-point annotations -- these mark request handlers, i.e. the
+# top of a cross-file flow. Useful as evidence that the file is a web entry.
+_JAVA_ENTRY_ANNOS = (
+    "GetMapping", "PostMapping", "PutMapping", "DeleteMapping",
+    "PatchMapping", "RequestMapping", "RestController", "Controller",
+)
+
+
+@dataclass(frozen=True)
+class FrameworkFacts:
+    """Slicing-relevant facts extracted from a single source file.
+
+    ``tainted_params`` lists parameter names annotated as request inputs
+    (e.g. ``@RequestParam String name`` -> ``"name"``). ``taint_calls``
+    records receiver-free taint-source call shapes that appeared. These
+    feed the SDG taint roots and the IAM symbol environment Sigma so a
+    cross-file-confirmed tainted value is flagged for disambiguation.
+    """
+
+    framework: str
+    tainted_params: tuple[str, ...] = ()
+    taint_calls: tuple[str, ...] = ()
+    is_web_entry: bool = False
+    evidence: tuple[str, ...] = ()
+
+
+_PARAM_ANNO_RE = re.compile(
+    r"@(?P<anno>" + "|".join(_JAVA_TAINT_SOURCE_ANNOS) + r")\b"
+    r"(?:\s*\([^)]*\))?\s+"
+    r"(?:final\s+)?[A-Za-z_][\w.<>\[\]]*\s+"
+    r"(?P<name>[A-Za-z_]\w*)",
+)
+
+
+def extract_facts(*, host_language: str, source: str) -> FrameworkFacts:
+    """Extract taint sources / entry-point markers for global slicing.
+
+    Pure-text and fail-soft: an empty :class:`FrameworkFacts` (no
+    tainted params) is a safe default that simply makes the SDG slicer
+    more conservative.
+    """
+    profile = detect_framework(host_language=host_language, source=source)
+    if host_language != "java":
+        return FrameworkFacts(framework=profile.name)
+
+    tainted: list[str] = []
+    evidence: list[str] = []
+    for m in _PARAM_ANNO_RE.finditer(source):
+        tainted.append(m.group("name"))
+        evidence.append("@" + m.group("anno"))
+
+    taint_calls: list[str] = []
+    for pat in _JAVA_TAINT_SOURCE_CALLS:
+        if re.search(pat, source):
+            taint_calls.append(pat.strip("\\b").rstrip(r"\s*\("))
+
+    is_entry = any(("@" + a) in source for a in _JAVA_ENTRY_ANNOS)
+
+    return FrameworkFacts(
+        framework=profile.name,
+        tainted_params=tuple(dict.fromkeys(tainted)),
+        taint_calls=tuple(dict.fromkeys(taint_calls)),
+        is_web_entry=is_entry,
+        evidence=tuple(dict.fromkeys(evidence)),
+    )
+
+
 __all__ = [
     "FrameworkProfile",
+    "FrameworkFacts",
     "detect_framework",
+    "extract_facts",
     "catalog_path_for",
 ]

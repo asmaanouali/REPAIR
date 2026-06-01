@@ -86,9 +86,22 @@ def validate(file: Path) -> None:
 
 @app.command()
 def pipeline(file: Path,
-             json_out: Path | None = typer.Option(None, help="Write JSON report")) -> None:
+             json_out: Path | None = typer.Option(None, help="Write JSON report"),
+             engine: str = typer.Option(
+                 "regex",
+                 help="Slicer engine: regex | ts | sdg (global, inter-procedural)"),
+             project_root: Path | None = typer.Option(
+                 None, "--project-root",
+                 help="Project root for the global (sdg) slicer; "
+                      "defaults to the sink file's directory")) -> None:
     """Stages A..G: full end-to-end run."""
-    res = run_file(file)
+    proj = None
+    if engine.strip().lower() == "sdg":
+        import os
+        from core.slicer.project import ProjectModel
+        os.environ["IRSAM_SLICER"] = "sdg"
+        proj = ProjectModel.from_root(project_root or file.parent)
+    res = run_file(file, project=proj)
     report = {
         "file": res.file,
         "stage_reached": res.stage_reached,

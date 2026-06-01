@@ -35,12 +35,16 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from core.slicer import (
     SliceAbstention,
     SliceResult,
     slice_sink_argument as _java_slice,
 )
+
+if TYPE_CHECKING:  # pragma: no cover - typing only
+    from core.slicer.project import ProjectModel
 
 
 @dataclass(frozen=True)
@@ -53,8 +57,30 @@ class InterprocTrace:
 def slice_with_interproc(
     java_src: str,
     sink_line: int,
+    *,
+    project: "ProjectModel | None" = None,
 ) -> SliceResult | SliceAbstention:
-    """Slice with one-hop intra-class helper inlining."""
+    """Slice with helper inlining.
+
+    With no ``project`` this performs the original *one-hop, same
+    compilation unit* expansion. When a
+    :class:`~core.slicer.project.ProjectModel` is supplied, the call is
+    delegated to the multi-hop, cross-file SDG slicer
+    (:func:`core.slicer.sdg.slice_global`) so the same surgical lift is
+    applied transitively across files.
+    """
+    if project is not None:
+        from core.slicer.sdg import slice_global
+
+        # The project model indexes sources by path; the in-memory
+        # snippet is sliced by re-registering it under a synthetic path
+        # only when it is not already part of the model.
+        for path, src in project.files.items():
+            if src == java_src:
+                return slice_global(project, path, sink_line)
+        # Fall through to single-file behaviour if the snippet is not
+        # part of the indexed project.
+
     base = _java_slice(java_src, sink_line)
     if isinstance(base, SliceResult):
         return base
