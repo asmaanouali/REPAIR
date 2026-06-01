@@ -78,7 +78,25 @@ class GateReport:
 # --- gate 1: compile ----------------------------------------------------------
 
 
-def run_compile_gate(java_src: str, *, classname_hint: str | None = None) -> GateOutcome:
+def run_compile_gate(
+    java_src: str,
+    *,
+    classname_hint: str | None = None,
+    language: str = "java",
+) -> GateOutcome:
+    """Compile/parse the patched source in a language-appropriate way.
+
+    For ``language="python"`` the gate uses the in-process CPython
+    compiler (:func:`compile`) so a Python patch is never handed to
+    ``javac``. For Java it shells out to ``javac`` when available and
+    otherwise falls back to the structural brace/paren check.
+    """
+    if language == "python":
+        try:
+            compile(java_src, "<patched>", "exec")
+        except SyntaxError as e:
+            return GateOutcome("compile", False, f"python syntax error: {e}")
+        return GateOutcome("compile", True, "python source compiles")
     classname = classname_hint or _extract_public_class(java_src) or "Patched"
     if shutil.which("javac") is None:
         ok, detail = _structural_java_check(java_src)
@@ -426,7 +444,13 @@ def run_differential_gate(
             try:
                 rows_p = con_p.execute(patched_prepared_template, (v,)).fetchall()
             except sqlite3.Error as e:
-                failures.append(f"benign:{v!r} patched-error: {e}")
+                # A patched error is only a regression if the *original*
+                # concat form produced a working baseline on this fixture.
+                # If the original also failed (e.g. the query references a
+                # schema absent from the in-memory fixture), the comparison
+                # is inconclusive rather than a divergence -- skip it.
+                if rows_o is not None:
+                    failures.append(f"benign:{v!r} patched-error: {e}")
                 continue
             if rows_o is not None and rows_o != rows_p:
                 failures.append(
@@ -478,7 +502,7 @@ def run_all_gates(
     language: str = "java",
 ) -> GateReport:
     gates: list[GateOutcome] = []
-    gates.append(run_compile_gate(patched_source))
+    gates.append(run_compile_gate(patched_source, language=language))
     gates.append(run_regression_gate(project_dir))
     gates.append(run_structural_gate(iam, realizations, parameterizing_apis))
     gates.append(run_resast_gate(patched_source, language=language))

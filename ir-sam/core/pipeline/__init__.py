@@ -280,6 +280,7 @@ def _run_source_at_sink(
         original_concat_template=original_concat,
         patched_prepared_template=patched_oracle,
         param_kind=param_kind,
+        language=backend.language if backend is not None else "java",
     )
 
     # Phase 9: collect proof obligations from the binders this patch

@@ -1,0 +1,26 @@
+IR-SAM Snippet-Level Test Results
+=================================
+snippets               : 14
+
+Detection (Stage-A localisation vs ground-truth label)
+  precision            : 1.0
+  recall               : 1.0
+  F1                   : 1.0
+  false-positive rate  : 0.0
+  false-negative rate  : 0.0
+  accuracy             : 1.0
+  confusion (TP/FP/TN/FN): 11/0/3/0
+
+Remediation (A..G outcome vs expected)
+  remediation accuracy : 1.0
+  patch-correctness    : 1.0 (4/4)
+  Stage-G gate-pass    : 1.0 (4/4 synthesized patches)
+  abstention soundness : 1.0 (7/7)
+  residual CWE total   : 0
+  median latency (s)   : 0.0018
+
+Per-CWE breakdown (detected / remediation-ok / n)
+  CWE-643   : 2/2/2
+  CWE-78    : 3/3/3
+  CWE-89    : 7/7/7
+  CWE-90    : 2/2/2

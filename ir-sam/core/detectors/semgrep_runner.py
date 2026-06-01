@@ -8,9 +8,14 @@ returns a typed :class:`DetectorUnavailable` outcome rather than
 raising.
 
 The set of rules to apply is controlled by the
-``IRSAM_SEMGREP_CONFIG`` environment variable (default: ``auto``).
-For deterministic CI runs prefer pinning to a registry path such as
-``p/r2c-security-audit`` or to a local YAML directory.
+``IRSAM_SEMGREP_CONFIG`` environment variable. The default is the
+repository-local ruleset ``configs/semgrep/irsam-injection.yml``,
+which mirrors the registry rule IDs consumed by
+:data:`core.ingest.semgrep.SEMGREP_RULE_MAP` and runs deterministically
+offline. The registry ``auto`` form is intentionally *not* the default
+because it requires network access and is rejected by recent Semgrep
+releases when ``--metrics=off`` is set. To use the registry, set
+``IRSAM_SEMGREP_CONFIG=auto`` (or a path such as ``p/r2c-security-audit``).
 """
 
 from __future__ import annotations
@@ -30,6 +35,11 @@ from .base import (
     DetectorUnavailable,
 )
 
+_DEFAULT_CONFIG = str(
+    Path(__file__).resolve().parents[2]
+    / "configs" / "semgrep" / "irsam-injection.yml"
+)
+
 
 class SemgrepRunner:
     """Always-on Semgrep detector."""
@@ -39,7 +49,7 @@ class SemgrepRunner:
     def __init__(self, config: str | None = None,
                  timeout_seconds: int = 120) -> None:
         self._config = config or os.environ.get(
-            "IRSAM_SEMGREP_CONFIG", "auto",
+            "IRSAM_SEMGREP_CONFIG", _DEFAULT_CONFIG,
         )
         self._timeout = timeout_seconds
 

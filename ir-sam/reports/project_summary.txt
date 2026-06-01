@@ -1,0 +1,37 @@
+IR-SAM Project-Level Test Results
+=================================
+
+[owasp-benchmark-java]  (java, https://github.com/OWASP-Benchmark/BenchmarkJava.git)
+  semgrep findings      : 138 (in-scope 138)
+  detection (labelled, 849 cases)
+    precision/recall/F1 : 0.5725/0.1795/0.2734
+    FP-rate / FN-rate   : 0.1443/0.8205
+    confusion TP/FP/TN/FN: 79/59/350/361
+      CWE-643: P/R/F1=0.0/0.0/0.0 (TP/FP/TN/FN=0/0/20/15)
+      CWE-78: P/R/F1=0.75/0.0714/0.1304 (TP/FP/TN/FN=9/3/122/117)
+      CWE-89: P/R/F1=0.5556/0.2574/0.3518 (TP/FP/TN/FN=70/56/176/202)
+      CWE-90: P/R/F1=0.0/0.0/0.0 (TP/FP/TN/FN=0/0/32/27)
+  remediation (138 findings)
+    patch synthesized   : 0
+    residual-CWE-free   : 0
+    all Stage-G gates ok: 0
+    sound abstentions   : 138
+    abstention reasons  : {"sql0_syntax:unexpected char '{' at 0": 12, 'no connection variable in scope': 55, "sql0_syntax:unexpected char '?' at 35": 54, 'unsupported_backend:java/shell': 12, 'sql0_syntax:unexpected char "\'" at 71': 3, 'sql0_syntax:unexpected char "\'" at 70': 2}
+
+[java-sec-code]  (java, https://github.com/JoyChou93/java-sec-code.git)
+  semgrep findings      : 2 (in-scope 2)
+  remediation (2 findings)
+    patch synthesized   : 0
+    residual-CWE-free   : 0
+    all Stage-G gates ok: 0
+    sound abstentions   : 2
+    abstention reasons  : {'unsupported_backend:java/shell': 2}
+
+[dvpwa]  (python, https://github.com/anxolerd/dvpwa.git)
+  semgrep findings      : 0 (in-scope 0)
+  remediation (0 findings)
+    patch synthesized   : 0
+    residual-CWE-free   : 0
+    all Stage-G gates ok: 0
+    sound abstentions   : 0
+

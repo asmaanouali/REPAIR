@@ -1,0 +1,15 @@
+id,cwe,lang,interpreter,vulnerable,expect,flagged,detector_rule_ids,stage_reached,outcome,abstention_reason,all_gates_passed,failing_gate,latency_seconds,residual_cwe,detection_correct,remediation_correct,provenance
+sqli-java-concat-executeQuery,CWE-89,java,sql,True,patched,True,formatted-sql-string,G,patched,,True,,2.1971,0,True,True,NIST SARD Juliet 1.3 CWE89_SQL_Injection__connect_tcp_executeQuery_01
+sqli-java-concat-executeUpdate,CWE-89,java,sql,True,patched,True,formatted-sql-string,G,patched,,True,,2.3471,0,True,True,NIST SARD Juliet 1.3 CWE89_SQL_Injection__connect_tcp_executeUpdate_01
+sqli-java-prepared-safe,CWE-89,java,sql,False,clean,False,,D,clean,sql0_syntax:unexpected char '?' at 41,True,,0.0018,0,True,True,OWASP Cheat Sheet: parameterised PreparedStatement (negative control)
+sqli-python-fstring-execute,CWE-89,python,sql,True,patched,True,formatted-sql-query,G,patched,,True,,0.1591,0,True,True,NIST SARD CWE-89 Python f-string DB-API pattern; cf. CVE-2019-8331-class
+sqli-python-concat-execute,CWE-89,python,sql,True,patched,True,formatted-sql-query,G,patched,,True,,0.1632,0,True,True,NIST SARD CWE-89 Python string-concat DB-API pattern
+sqli-python-percent-execute,CWE-89,python,sql,True,abstain,True,formatted-sql-query,D,abstain,sql0_syntax:expected 'FROM' got OP (,True,,0.0028,0,True,True,NIST SARD CWE-89 Python %-format DB-API pattern; %-formatting is outside the Stage-C reconstructor grammar (concatenation + f-strings) so IR-SAM soundly abstains -- documented limitation
+sqli-python-parameterised-safe,CWE-89,python,sql,False,clean,False,,D,clean,sql0_syntax:unexpected char '?' at 41,True,,0.0018,0,True,True,PEP-249 parameterised execute (negative control)
+cmdi-java-processbuilder-concat,CWE-78,java,shell,True,abstain,True,command-injection-process-builder,A,abstain,unsupported_backend:java/shell,True,,0.0013,0,True,True,NIST SARD Juliet 1.3 CWE78_OS_Command_Injection__... ProcessBuilder
+cmdi-python-subprocess-shell,CWE-78,python,shell,True,abstain,True,subprocess-shell-true,A,abstain,unsupported_backend:python/shell,True,,0.001,0,True,True,NIST SARD CWE-78 Python subprocess shell=True pattern; cf. CVE-2020-... class
+cmdi-python-list-safe,CWE-78,python,shell,False,clean,False,,B,clean,no_static_sql_skeleton,True,,0.0012,0,True,True,subprocess argument-vector idiom (negative control)
+ldapi-java-dircontext-concat,CWE-90,java,ldap,True,abstain,True,ldap-injection,A,abstain,unsupported_backend:java/ldap,True,,0.001,0,True,True,NIST SARD Juliet 1.3 CWE90_LDAP_Injection__... DirContext.search
+ldapi-python-search-concat,CWE-90,python,ldap,True,abstain,True,ldap-injection,A,abstain,unsupported_backend:python/ldap,True,,0.0012,0,True,True,NIST SARD CWE-90 python-ldap search_s filter-concat pattern
+xpathi-java-evaluate-concat,CWE-643,java,xpath,True,abstain,True,xpath-injection,A,abstain,unsupported_backend:java/xpath,True,,0.0007,0,True,True,NIST SARD Juliet 1.3 CWE643_Xpath_Injection__... XPath.evaluate
+xpathi-python-lxml-concat,CWE-643,python,xpath,True,abstain,True,xpath-injection,A,abstain,unsupported_backend:python/xpath,True,,0.0027,0,True,True,NIST SARD CWE-643 lxml xpath filter-concat pattern

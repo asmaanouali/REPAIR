@@ -1,4 +1,0 @@
-repos/*
-!repos/.gitkeep
-metadata/*.log
-metadata/tmp-*

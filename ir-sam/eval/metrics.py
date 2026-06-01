@@ -165,3 +165,93 @@ class Stopwatch:
 
     def __exit__(self, *a):
         self.elapsed = time.perf_counter() - self.t0
+
+
+# --- detection metrics (precision / recall / F1) ---
+#
+# The M1..M6 family above scores *patch quality* on the cases the tool
+# was asked to repair. A separate, standard question is how well the
+# Stage-A detector localises the injection sinks in the first place,
+# evaluated against a labelled ground truth (OWASP Benchmark
+# ``expectedresults`` or the Juliet good/bad split). For that we use the
+# usual confusion-matrix derived scores.
+
+
+@dataclass(frozen=True)
+class DetectionOutcome:
+    """One labelled test item for detection scoring.
+
+    ``case_id``     -- stable identifier (file or test name).
+    ``is_vulnerable`` -- ground-truth label (True == a real sink exists).
+    ``flagged``     -- the tool reported >= 1 in-scope finding.
+    """
+
+    case_id: str
+    is_vulnerable: bool
+    flagged: bool
+
+
+@dataclass(frozen=True)
+class ConfusionMatrix:
+    tp: int
+    fp: int
+    tn: int
+    fn: int
+
+    @property
+    def n(self) -> int:
+        return self.tp + self.fp + self.tn + self.fn
+
+    @property
+    def precision(self) -> float:
+        denom = self.tp + self.fp
+        return self.tp / denom if denom else 0.0
+
+    @property
+    def recall(self) -> float:
+        denom = self.tp + self.fn
+        return self.tp / denom if denom else 0.0
+
+    @property
+    def f1(self) -> float:
+        p, r = self.precision, self.recall
+        return (2 * p * r / (p + r)) if (p + r) else 0.0
+
+    @property
+    def false_positive_rate(self) -> float:
+        """FP / (FP + TN) -- the fraction of benign items wrongly flagged."""
+        denom = self.fp + self.tn
+        return self.fp / denom if denom else 0.0
+
+    @property
+    def false_negative_rate(self) -> float:
+        """FN / (FN + TP) -- the fraction of real sinks missed."""
+        denom = self.fn + self.tp
+        return self.fn / denom if denom else 0.0
+
+    @property
+    def accuracy(self) -> float:
+        return (self.tp + self.tn) / self.n if self.n else 0.0
+
+
+def confusion_matrix(outcomes: Sequence[DetectionOutcome]) -> ConfusionMatrix:
+    tp = sum(1 for o in outcomes if o.is_vulnerable and o.flagged)
+    fn = sum(1 for o in outcomes if o.is_vulnerable and not o.flagged)
+    fp = sum(1 for o in outcomes if not o.is_vulnerable and o.flagged)
+    tn = sum(1 for o in outcomes if not o.is_vulnerable and not o.flagged)
+    return ConfusionMatrix(tp=tp, fp=fp, tn=tn, fn=fn)
+
+
+def detection_metrics(outcomes: Sequence[DetectionOutcome]) -> dict:
+    """Precision, recall, F1 and the FP/FN rates for a labelled corpus."""
+    cm = confusion_matrix(outcomes)
+    return {
+        "precision":           round(cm.precision, 4),
+        "recall":              round(cm.recall, 4),
+        "f1":                  round(cm.f1, 4),
+        "false_positive_rate": round(cm.false_positive_rate, 4),
+        "false_negative_rate": round(cm.false_negative_rate, 4),
+        "accuracy":            round(cm.accuracy, 4),
+        "tp": cm.tp, "fp": cm.fp, "tn": cm.tn, "fn": cm.fn,
+        "n": cm.n,
+    }

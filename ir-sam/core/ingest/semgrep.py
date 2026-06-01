@@ -27,16 +27,55 @@ SEMGREP_RULE_MAP: dict[str, tuple[str, str, int, str]] = {
     "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true": (
         "shell", "python", 0, "subprocess.run"
     ),
+    "java.lang.security.audit.ldap-injection.ldap-injection": (
+        "ldap", "java", 1, "javax.naming.directory.DirContext.search"
+    ),
+    "python.lang.security.audit.ldap-injection.ldap-injection": (
+        "ldap", "python", 1, "ldap.ldapobject.LDAPObject.search_s"
+    ),
+    "java.lang.security.audit.xpath-injection.xpath-injection": (
+        "xpath", "java", 0, "javax.xml.xpath.XPath.evaluate"
+    ),
+    "python.lang.security.audit.xpath-injection.xpath-injection": (
+        "xpath", "python", 0, "lxml.etree._Element.xpath"
+    ),
+    # Taint-mode (inter-statement dataflow) rules.
+    "java.lang.security.taint.servlet-sql-injection.servlet-sql-injection": (
+        "sql", "java", 0, "java.sql.Statement.executeQuery"
+    ),
+    "java.lang.security.taint.servlet-command-injection.servlet-command-injection": (
+        "shell", "java", 0, "java.lang.ProcessBuilder.<init>"
+    ),
 }
+
+
+def _resolve_rule(rule_id: str) -> tuple[str, str, int, str] | None:
+    """Resolve a Semgrep rule id to an IR-SAM (interpreter, language,
+    arg_idx, sink_hint) tuple.
+
+    Registry rules carry their canonical dotted id verbatim. Rules loaded
+    from a local YAML file are namespaced by Semgrep with the config's
+    path (e.g. ``configs.semgrep.java.lang.security...``), so an exact
+    lookup misses. We therefore fall back to a suffix match against the
+    known canonical ids.
+    """
+    direct = SEMGREP_RULE_MAP.get(rule_id)
+    if direct is not None:
+        return direct
+    for canonical, value in SEMGREP_RULE_MAP.items():
+        if rule_id.endswith(canonical):
+            return value
+    return None
 
 
 def adapt(sarif_path: str | Path) -> Iterator[IRSAMFinding]:
     sarif = load_sarif(sarif_path)
     for run, result in iter_results(sarif):
         rule_id = rule_id_of(result)
-        if rule_id not in SEMGREP_RULE_MAP:
+        resolved = _resolve_rule(rule_id)
+        if resolved is None:
             continue
-        interpreter, language, arg_idx, sink_hint = SEMGREP_RULE_MAP[rule_id]
+        interpreter, language, arg_idx, sink_hint = resolved
         file, line_start, line_end = physical_location(result)
         rules = (run.get("tool", {}).get("driver", {}).get("rules", []) or [])
         rule_obj = next((r for r in rules if r.get("id") == rule_id), None)

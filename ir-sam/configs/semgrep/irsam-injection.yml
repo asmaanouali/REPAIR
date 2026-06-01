@@ -1,0 +1,208 @@
+# IR-SAM local Semgrep ruleset for injection sinks.
+#
+# Shipped with the repository so the detector-backed re-SAST gate and
+# Stage-A ingest run *deterministically and offline*. The registry
+# ``--config auto`` form requires network access and refuses to run
+# when ``--metrics=off`` is set, so the runner defaults to this file.
+#
+# Each rule ``id`` is the exact key consumed by
+# ``core.ingest.semgrep.SEMGREP_RULE_MAP``; do not rename without
+# updating that table.
+rules:
+  - id: java.lang.security.audit.formatted-sql-string.formatted-sql-string
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Detected a formatted (string-concatenated) SQL statement passed to a
+      JDBC execute API. This is a SQL-injection sink (CWE-89). Use a
+      PreparedStatement with bound parameters.
+    metadata:
+      cwe: ["CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $STMT.executeQuery("..." + ...)
+          - pattern: $STMT.executeUpdate("..." + ...)
+          - pattern: $STMT.execute("..." + ...)
+
+  - id: python.lang.security.audit.formatted-sql-query.formatted-sql-query
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Detected a formatted (concatenated or f-string) SQL query passed to a
+      DB-API execute call. This is a SQL-injection sink (CWE-89). Pass the
+      values as the second argument to execute() instead.
+    metadata:
+      cwe: ["CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $CUR.execute("..." + ...)
+          - pattern: $CUR.execute(f"...")
+          - pattern: $CUR.execute("..." % ...)
+          - pattern: $CUR.execute("...".format(...))
+
+  - id: java.lang.security.audit.command-injection-process-builder.command-injection-process-builder
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Detected a ProcessBuilder / Runtime.exec command built from a
+      concatenated string. This is an OS-command-injection sink (CWE-78).
+      Pass an argument vector (List<String>) instead of a shell string.
+    metadata:
+      cwe: ["CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: new ProcessBuilder("..." + ...)
+          - pattern: new ProcessBuilder(..., "..." + ..., ...)
+          - pattern: Runtime.getRuntime().exec("..." + ...)
+          - pattern: Runtime.getRuntime().exec(..., "..." + ..., ...)
+
+  - id: python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Detected a subprocess call with a concatenated/f-string command and
+      shell=True. This is an OS-command-injection sink (CWE-78). Pass an
+      argument list and drop shell=True.
+    metadata:
+      cwe: ["CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: subprocess.run("..." + ..., shell=True, ...)
+          - pattern: subprocess.run(f"...", shell=True, ...)
+          - pattern: subprocess.call("..." + ..., shell=True, ...)
+          - pattern: subprocess.Popen("..." + ..., shell=True, ...)
+          - pattern: os.system("..." + ...)
+
+  - id: java.lang.security.audit.ldap-injection.ldap-injection
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Detected an LDAP search filter built from string concatenation. This
+      is an LDAP-injection sink (CWE-90). Escape filter values per RFC 4515
+      (e.g., ESAPI Encoder.encodeForLDAP).
+    metadata:
+      cwe: ["CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $CTX.search($BASE, "..." + ..., ...)
+          - pattern: $CTX.search($BASE, "..." + ...)
+
+  - id: python.lang.security.audit.ldap-injection.ldap-injection
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Detected an LDAP search filter built from concatenation/f-string. This
+      is an LDAP-injection sink (CWE-90). Escape with
+      ldap.filter.escape_filter_chars / ldap3 escape_filter_chars.
+    metadata:
+      cwe: ["CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $CONN.search($BASE, "..." + ..., ...)
+          - pattern: $CONN.search_s($BASE, $SCOPE, "..." + ...)
+          - pattern: $CONN.search($BASE, f"...", ...)
+
+  - id: java.lang.security.audit.xpath-injection.xpath-injection
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Detected an XPath expression built from string concatenation. This is
+      an XPath-injection sink (CWE-643). Use XPathVariableResolver bound
+      variables instead of interpolating values.
+    metadata:
+      cwe: ["CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $XP.evaluate("..." + ..., ...)
+          - pattern: $XP.compile("..." + ...)
+
+  - id: python.lang.security.audit.xpath-injection.xpath-injection
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Detected an XPath expression built from concatenation/f-string. This
+      is an XPath-injection sink (CWE-643). Use lxml variable binding
+      ($name) instead of interpolating values.
+    metadata:
+      cwe: ["CWE-643: Improper Neutralization of Data within XPath Expressions ('XPath Injection')"]
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $TREE.xpath("..." + ...)
+          - pattern: $TREE.xpath(f"...")
+
+  # --- Taint-mode (inter-statement dataflow) rules -----------------------
+  #
+  # The syntactic rules above catch injection where the unsafe value is
+  # concatenated *inside* the sink call. Real applications (e.g. the OWASP
+  # Benchmark) build the tainted string across several statements, so we
+  # additionally run Semgrep in taint mode: a finding is reported only when
+  # data flows from an untrusted HTTP source to a query/command sink without
+  # passing through a recognised sanitiser. This yields meaningful recall on
+  # dataflow-obfuscated code while keeping false positives low (sanitised /
+  # constant queries are not flagged).
+  - id: java.lang.security.taint.servlet-sql-injection.servlet-sql-injection
+    languages: [java]
+    severity: ERROR
+    mode: taint
+    message: >-
+      Untrusted HTTP input flows into a JDBC query without parameterisation
+      (CWE-89). Use a PreparedStatement with bound parameters.
+    metadata:
+      cwe: ["CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"]
+      category: security
+    pattern-sources:
+      - pattern: $REQ.getParameter(...)
+      - pattern: $REQ.getParameterValues(...)
+      - pattern: $REQ.getHeader(...)
+      - pattern: $REQ.getHeaders(...)
+      - pattern: $REQ.getQueryString()
+      - pattern: $C.getValue()
+      - pattern: System.getenv(...)
+      - pattern: System.getProperty(...)
+    pattern-sanitizers:
+      - pattern: Integer.parseInt(...)
+      - pattern: Long.parseLong(...)
+      - pattern: Double.parseDouble(...)
+      - pattern: Boolean.parseBoolean(...)
+      - pattern: $E.encodeForSQL(...)
+    pattern-sinks:
+      - pattern: $STMT.executeQuery($SQL)
+      - pattern: $STMT.executeUpdate($SQL)
+      - pattern: $STMT.execute($SQL)
+      - pattern: $STMT.executeLargeUpdate($SQL)
+      - pattern: $STMT.addBatch($SQL)
+      - pattern: $CONN.prepareStatement($SQL, ...)
+      - pattern: $CONN.prepareStatement($SQL)
+      - pattern: $CONN.prepareCall($SQL)
+
+  - id: java.lang.security.taint.servlet-command-injection.servlet-command-injection
+    languages: [java]
+    severity: ERROR
+    mode: taint
+    message: >-
+      Untrusted HTTP input flows into an OS-command sink (CWE-78). Pass an
+      argument vector (List<String>) and avoid a shell interpreter.
+    metadata:
+      cwe: ["CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"]
+      category: security
+    pattern-sources:
+      - pattern: $REQ.getParameter(...)
+      - pattern: $REQ.getParameterValues(...)
+      - pattern: $REQ.getHeader(...)
+      - pattern: $REQ.getHeaders(...)
+      - pattern: $REQ.getQueryString()
+      - pattern: $C.getValue()
+      - pattern: System.getenv(...)
+      - pattern: System.getProperty(...)
+    pattern-sinks:
+      - pattern: new ProcessBuilder(...)
+      - pattern: Runtime.getRuntime().exec(...)
+      - pattern: $PB.command(...)
