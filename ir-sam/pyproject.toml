@@ -20,6 +20,7 @@ dependencies = [
     "rich>=13.7",
     "requests>=2.31",
     "pandas>=2.2",
+    "sqlglot>=25.0",
 ]
 
 [project.optional-dependencies]

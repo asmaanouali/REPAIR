@@ -35,7 +35,7 @@ from core.pipeline import PipelineOutcome, run_file, run_finding
 # ---------------------------------------------------------------------------
 
 
-SupportedLanguage = Literal["java", "python"]
+SupportedLanguage = Literal["java"]
 
 
 @dataclass(frozen=True)
@@ -145,7 +145,7 @@ class FindingRecord:
 
 @dataclass(frozen=True)
 class ScanOptions:
-    languages: tuple[SupportedLanguage, ...] = ("java", "python")
+    languages: tuple[SupportedLanguage, ...] = ("java",)
     include_globs: tuple[str, ...] = ()
     exclude_globs: tuple[str, ...] = (
         "**/.git/**", "**/node_modules/**", "**/.venv/**", "**/build/**",
@@ -208,7 +208,6 @@ class PipelineEvent:
 
 _LANG_TO_SUFFIXES: dict[str, tuple[str, ...]] = {
     "java": (".java",),
-    "python": (".py",),
 }
 
 

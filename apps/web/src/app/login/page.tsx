@@ -19,7 +19,6 @@ import { api, ApiError, type User } from "@/lib/api";
 
 const LANGUAGES = [
   { name: "Java", versions: "8 — 21", icon: Database },
-  { name: "Python", versions: "3.8 — 3.12", icon: Database },
 ];
 
 const VULNERABILITIES: {
@@ -31,25 +30,25 @@ const VULNERABILITIES: {
   {
     cwe: "CWE-89",
     title: "SQL Injection",
-    blurb: "JDBC, JPA, Hibernate, MyBatis, Spring JdbcTemplate, Django ORM, PEP-249 DB-API",
+    blurb: "JDBC, JPA, Hibernate, MyBatis, Spring JdbcTemplate",
     icon: Database,
   },
   {
     cwe: "CWE-78",
     title: "OS Command Injection",
-    blurb: "Java ProcessBuilder / Runtime.exec, Python subprocess, os.system / os.popen",
+    blurb: "Java ProcessBuilder / Runtime.exec",
     icon: Terminal,
   },
   {
     cwe: "CWE-90",
     title: "LDAP Injection",
-    blurb: "JNDI LDAP, python-ldap, ldap3 — RFC 4515 filter parameterisation",
+    blurb: "JNDI LDAP — RFC 4515 filter parameterisation",
     icon: Network,
   },
   {
     cwe: "CWE-643",
     title: "XPath Injection",
-    blurb: "javax.xml.xpath, lxml XPath — variable-bound expression evaluation",
+    blurb: "javax.xml.xpath — variable-bound expression evaluation",
     icon: FileSearch,
   },
 ];

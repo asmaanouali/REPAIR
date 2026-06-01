@@ -21,9 +21,9 @@ stages E–G stay untouched.
 
 Dispatch
 --------
-Calling code can opt in by setting ``IRSAM_SQL_PARSER=v1`` (or by passing
-``parser="v1"`` to :func:`parse_template_to_sig`). Default behavior remains
-SQL₀.
+This is now the default Stage-D SQL parser. Set ``IRSAM_SQL_PARSER=sql0``
+(or pass ``parser="sql0"`` to :func:`parse_template_to_sig`) to fall back to
+the original minimal SQL₀ parser.
 """
 
 from __future__ import annotations
@@ -54,6 +54,14 @@ SUPPORTED_DIALECTS = (
 
 _HOLE_MARKER_RE = re.compile(r"<<H(\d+)>>")
 _HOLE_SENTINEL_RE = re.compile(r"__IRSAM_HOLE_(\d+)__")
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _clean_sqlglot_error(raw: str) -> str:
+    """Strip ANSI codes and restore <<Hi>> markers from a sqlglot error string."""
+    msg = _ANSI_RE.sub("", raw)
+    msg = _HOLE_SENTINEL_RE.sub(lambda m: f"<<H{m.group(1)}>>", msg)
+    return msg[:200]
 
 
 def _substitute_markers(text: str) -> str:
@@ -512,7 +520,7 @@ def parse_template_to_sig_v1(
     try:
         tree = sqlglot.parse_one(sentinel_text, read=dialect)
     except ParseError as exc:
-        raise SQL0SyntaxError(str(exc)[:200]) from exc
+        raise SQL0SyntaxError(_clean_sqlglot_error(str(exc))) from exc
     if tree is None:
         raise SQL0SyntaxError("empty SQL input")
 
@@ -530,4 +538,4 @@ def parse_template_to_sig_v1(
 
 def select_parser() -> str:
     """Return ``'v1'`` if env opts in, else ``'sql0'``."""
-    return os.environ.get("IRSAM_SQL_PARSER", "sql0").strip().lower()
+    return os.environ.get("IRSAM_SQL_PARSER", "v1").strip().lower()

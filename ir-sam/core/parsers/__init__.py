@@ -435,16 +435,17 @@ def parse_template_to_sig(
 
     ``parser`` selects the Stage-D implementation:
 
-    * ``"sql0"`` — original LL parser (default; see module docstring).
     * ``"v1"``   — sqlglot-backed parser supporting JOIN / GROUP BY /
-      HAVING / CTE / subquery across :data:`core.parsers.sql_v1.SUPPORTED_DIALECTS`.
+      HAVING / CTE / subquery across :data:`core.parsers.sql_v1.SUPPORTED_DIALECTS`
+      (default).
+    * ``"sql0"`` — original minimal LL parser (see module docstring).
 
     Falls through to the ``IRSAM_SQL_PARSER`` env var when ``parser`` is
     ``None``.
     """
     if parser is None:
         import os
-        parser = os.environ.get("IRSAM_SQL_PARSER", "sql0").strip().lower()
+        parser = os.environ.get("IRSAM_SQL_PARSER", "v1").strip().lower()
     if parser == "v1":
         from core.parsers.sql_v1 import parse_template_to_sig_v1
         return parse_template_to_sig_v1(

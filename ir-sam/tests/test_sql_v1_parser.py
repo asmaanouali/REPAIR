@@ -186,16 +186,30 @@ def test_v1_unsupported_dialect_raises():
         parse_template_to_sig(tpl, parser="v1", dialect="cobol-sql")
 
 
-def test_v1_default_remains_sql0():
-    """Sanity: with no env / kwarg the SQL₀ parser is selected and rejects
+def test_default_parser_is_v1():
+    """Sanity: with no env / kwarg the v1 (sqlglot) parser is selected and
+    accepts JOIN syntax that the legacy SQL₀ parser rejected."""
+    tpl = _tpl(
+        "SELECT u.id FROM users u JOIN orders o ON u.id = o.uid "
+        "WHERE u.name = <<H0>>",
+        "string",
+    )
+    res = parse_template_to_sig(tpl)
+    kinds = [c.kind for c in res.sig.children if isinstance(c, SIGNode)]
+    assert "Join" in kinds
+
+
+def test_sql0_optin_rejects_join(monkeypatch):
+    """The legacy SQL₀ parser is still reachable via parser="sql0" and rejects
     JOIN syntax."""
+    monkeypatch.delenv("IRSAM_SQL_PARSER", raising=False)
     tpl = _tpl(
         "SELECT u.id FROM users u JOIN orders o ON u.id = o.uid "
         "WHERE u.name = <<H0>>",
         "string",
     )
     with pytest.raises((SQL0SyntaxError, SQL0AmbiguousIntent)):
-        parse_template_to_sig(tpl)
+        parse_template_to_sig(tpl, parser="sql0")
 
 
 def test_v1_in_list_disambig_hint_csv():

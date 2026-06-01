@@ -109,65 +109,10 @@ def _register_defaults() -> None:
         default_catalog_yaml=_BINDERS_DIR / "sql_jdbc.yaml",
     ))
 
-    # Python / SQL ------------------------------------------------------------
-    from core.lang.python import find_sink_calls as py_find_sinks
-    from core.lang.python import slice_sink_argument as py_slice
-    from core.rewriter.python_sql import (
-        synthesize_python_sql_patch as py_synth,
-    )
-
-    register(LanguageBackend(
-        language="python",
-        interpreter="sql",
-        find_sinks=py_find_sinks,
-        slice_at_sink=py_slice,
-        synthesize_patch=py_synth,
-        default_catalog_yaml=_BINDERS_DIR / "sql_pydbapi.yaml",
-    ))
-
-    # Python / shell (CWE-78) -------------------------------------------------
-    from core.parsers.shell import parse_shell_argv
-    from core.rewriter.shell import synthesize_python_shell_patch
-
-    register(LanguageBackend(
-        language="python",
-        interpreter="shell",
-        find_sinks=py_find_sinks,
-        slice_at_sink=py_slice,           # command is arg 0 for subprocess/os
-        synthesize_patch=synthesize_python_shell_patch,
-        default_catalog_yaml=_BINDERS_DIR / "python_subprocess.yaml",
-        parse_template=parse_shell_argv,
-    ))
-
-    # Python / LDAP (CWE-90) --------------------------------------------------
-    from core.parsers.ldap import parse_template_to_sig as parse_ldap
-    from core.rewriter.ldap import synthesize_python_ldap_patch
-
-    register(LanguageBackend(
-        language="python",
-        interpreter="ldap",
-        find_sinks=py_find_sinks,
-        slice_at_sink=_py_ldap_slice,     # filter is arg 1 (ldap3) / 2 (python-ldap)
-        synthesize_patch=synthesize_python_ldap_patch,
-        default_catalog_yaml=_BINDERS_DIR / "ldap_python.yaml",
-        parse_template=parse_ldap,
-    ))
-
-    # Python / XPath (CWE-643) ------------------------------------------------
-    from core.parsers.xpath import parse_template_to_sig as parse_xpath
-    from core.rewriter.xpath import synthesize_python_xpath_patch
-
-    register(LanguageBackend(
-        language="python",
-        interpreter="xpath",
-        find_sinks=py_find_sinks,
-        slice_at_sink=py_slice,           # query is arg 0 for Element.xpath()
-        synthesize_patch=synthesize_python_xpath_patch,
-        default_catalog_yaml=_BINDERS_DIR / "xpath_python.yaml",
-        parse_template=parse_xpath,
-    ))
-
     # Java backends (shell/ldap/xpath) ---------------------------------------
+    from core.parsers.shell import parse_shell_argv
+    from core.parsers.ldap import parse_template_to_sig as parse_ldap
+    from core.parsers.xpath import parse_template_to_sig as parse_xpath
     from core.slicer.nonsql import (
         find_java_ldap_sinks,
         find_java_shell_sinks,

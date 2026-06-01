@@ -16,12 +16,11 @@ const Editor = dynamic(
   { ssr: false, loading: () => <Skeleton className="h-64 w-full" /> },
 );
 
-const LANGS = ["java", "python"] as const;
+const LANGS = ["java"] as const;
 type Lang = (typeof LANGS)[number];
 
 const SAMPLE: Record<Lang, string> = {
   java: `String userId = req.getParameter("id");\nString sql = "SELECT * FROM users WHERE id = " + userId;\nStatement stmt = conn.createStatement();\nResultSet rs = stmt.executeQuery(sql);\n`,
-  python: `cursor.execute("SELECT * FROM users WHERE id = " + request.args.get("id"))\n`,
 };
 
 export default function QuickfixPage() {

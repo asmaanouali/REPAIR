@@ -70,7 +70,6 @@ class PipelineOutcome:
 
 _SUFFIX_TO_BACKEND_KEY: dict[str, tuple[str, str]] = {
     ".java": ("java", "sql"),
-    ".py":   ("python", "sql"),
 }
 
 
