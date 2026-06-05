@@ -1,0 +1,3637 @@
+{
+  "rows": [
+    {
+      "name": "CWE89_concat_eq_string_001",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_002",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_003",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_004",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_005",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_006",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_007",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_008",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_009",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_string_010",
+      "category": "concat-eq-string",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_001",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_002",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_003",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_004",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_005",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_006",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_007",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_008",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_009",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_eq_int_010",
+      "category": "concat-eq-int",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_001",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_002",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_003",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_004",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_005",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_006",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_007",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_008",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_009",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_like_010",
+      "category": "concat-like",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_001",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_002",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_003",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_004",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_005",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_006",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_007",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_008",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_009",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_in_list_010",
+      "category": "concat-in-list",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "D",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_001",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_002",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_003",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_004",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_005",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_006",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_007",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_008",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_009",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_limit_010",
+      "category": "concat-limit",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_001",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpcesp7d_i\\CWE89_concat_orderby_001.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_001\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_002",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpto_8jt2g\\CWE89_concat_orderby_002.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_002\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_003",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmp4re8ltxi\\CWE89_concat_orderby_003.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_003\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_004",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpgf9zfugr\\CWE89_concat_orderby_004.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_004\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_005",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmp3_pcll3g\\CWE89_concat_orderby_005.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_005\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_006",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpi6hyug94\\CWE89_concat_orderby_006.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_006\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_007",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmp3ib8ux0f\\CWE89_concat_orderby_007.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_007\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_008",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpstfh_db5\\CWE89_concat_orderby_008.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_008\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_009",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpgux9_xe0\\CWE89_concat_orderby_009.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_009\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_orderby_010",
+      "category": "concat-orderby-ident",
+      "expected_outcome": "abstain",
+      "expected_abstain_stage": "E",
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": false,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": false,
+          "detail": "C:\\Users\\la_no\\AppData\\Local\\Temp\\tmpr28gf3qt\\CWE89_concat_orderby_010.java:14: error: cannot find symbol\n        String __irsam_g_h0 = ALLOWED_COLS.get(col);\n                              ^\n  symbol:   variable ALLOWED_COLS\n  location: class CWE89_concat_orderby_010\n1 error"
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_001",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_002",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_003",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_004",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_005",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_006",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_007",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_008",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_009",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_update_010",
+      "category": "concat-update",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_001",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_002",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_003",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_004",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_005",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_006",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_007",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_008",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_009",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_delete_010",
+      "category": "concat-delete",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_001",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_002",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_003",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_004",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_005",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_006",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_007",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_008",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_009",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_concat_insert_010",
+      "category": "concat-insert",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_001",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_002",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_003",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_004",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_005",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_006",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_007",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_008",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_009",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    },
+    {
+      "name": "CWE89_stringbuilder_010",
+      "category": "stringbuilder-concat",
+      "expected_outcome": "patched",
+      "expected_abstain_stage": null,
+      "stage_reached": "G",
+      "abstention_reason": null,
+      "all_gates_passed": true,
+      "gates": [
+        {
+          "name": "compile",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "regression",
+          "passed": true,
+          "detail": "no project regression runner configured"
+        },
+        {
+          "name": "structural",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "name": "re_sast",
+          "passed": true,
+          "detail": "no residual CWE-89 patterns"
+        },
+        {
+          "name": "differential",
+          "passed": true,
+          "detail": "benign+attack equivalence holds"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_cases": 100,
+    "patched_expected": 80,
+    "patched_passed_all_gates": 80,
+    "abstain_expected": 20,
+    "abstain_correctly_at_stage": 0,
+    "patch_applicability": 1.0,
+    "patch_gate_pass_rate": 1.0,
+    "abstain_accuracy": 0.0,
+    "residual_cwe89": 0,
+    "gate_breakdown": {
+      "compile": {
+        "passed": 80,
+        "total": 80
+      },
+      "regression": {
+        "passed": 80,
+        "total": 80
+      },
+      "structural": {
+        "passed": 80,
+        "total": 80
+      },
+      "re_sast": {
+        "passed": 80,
+        "total": 80
+      },
+      "differential": {
+        "passed": 80,
+        "total": 80
+      }
+    }
+  }
+}

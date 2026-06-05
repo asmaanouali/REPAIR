@@ -323,9 +323,36 @@ def _scan_locals(method_src: str) -> _LocalEnv:
         sb_chunks.setdefault(name, []).append(arg)
     for name, chunks in sb_chunks.items():
         jt, prev = env.decls[name]
+        seed = _stringbuilder_seed(prev)
         joined = " + ".join(f"({c})" for c in chunks)
-        env.decls[name] = (jt, f"({prev}) + {joined}" if prev else joined)
+        env.decls[name] = (jt, f"({seed}) + {joined}" if seed else joined)
     return env
+
+
+_NEW_BUILDER_RE = re.compile(
+    r"^\s*new\s+(?:StringBuilder|StringBuffer)\s*\((?P<arg>.*)\)\s*$",
+    re.DOTALL,
+)
+
+
+def _stringbuilder_seed(prev: str | None) -> str | None:
+    """Return the string seed of a StringBuilder/StringBuffer initialiser.
+
+    ``new StringBuilder()`` seeds the empty string (returns ``None``);
+    ``new StringBuilder("SELECT ")`` seeds with the constructor argument.
+    Any other initialiser (e.g. an existing String variable) is returned
+    unchanged so it is expanded normally.
+    """
+    if not prev:
+        return None
+    m = _NEW_BUILDER_RE.match(prev)
+    if m is None:
+        return prev
+    arg = m.group("arg").strip()
+    # A bare int capacity argument (e.g. new StringBuilder(64)) seeds empty.
+    if not arg or arg.isdigit():
+        return None
+    return arg
 
 
 def _balanced_arg(src: str, lparen_pos: int) -> str | None:

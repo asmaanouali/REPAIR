@@ -1,0 +1,26 @@
+IR-SAM Phase-2 acceptance evaluation
+==================================================
+Total cases:               100
+Patched-expected cases:    80
+  reached stage G:         80
+  all 5 gates passed:      80
+Abstain-expected cases:    20
+  abstained at expected:   0
+
+Patch applicability:       100.00 %
+Patch gate-pass rate:      100.00 %
+Abstain accuracy:            0.00 %
+Residual CWE-89:           0
+
+Gate breakdown (patched-expected cases):
+  compile          80/ 80  (100.00 %)
+  regression       80/ 80  (100.00 %)
+  structural       80/ 80  (100.00 %)
+  re_sast          80/ 80  (100.00 %)
+  differential     80/ 80  (100.00 %)
+
+Acceptance gate: patch pass-rate >= 80 %  AND  residual == 0
+  patch pass-rate  : 100.00 %   (PASS)
+  residual CWE-89  :      0     (PASS)
+
+VERDICT: PASS

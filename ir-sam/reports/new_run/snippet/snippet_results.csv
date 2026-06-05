@@ -1,0 +1,10 @@
+id,cwe,lang,interpreter,vulnerable,expect,flagged,detector_rule_ids,stage_reached,outcome,abstention_reason,all_gates_passed,failing_gate,latency_seconds,residual_cwe,detection_correct,remediation_correct,provenance
+sqli-java-concat-executeQuery,CWE-89,java,sql,True,patched,True,formatted-sql-string,G,patched,,True,,2.4617,0,True,True,NIST SARD Juliet 1.3 CWE89_SQL_Injection__connect_tcp_executeQuery_01
+sqli-java-concat-executeUpdate,CWE-89,java,sql,True,patched,True,formatted-sql-string,G,patched,,True,,1.8309,0,True,True,NIST SARD Juliet 1.3 CWE89_SQL_Injection__connect_tcp_executeUpdate_01
+sqli-java-prepared-safe,CWE-89,java,sql,False,clean,False,,D,clean,sql0_syntax:unsupported value: Placeholder,True,,0.0033,0,True,True,OWASP Cheat Sheet: parameterised PreparedStatement (negative control)
+sqli-java-stringbuilder-executeQuery,CWE-89,java,sql,True,patched,False,,G,patched,,True,,1.9947,0,False,True,NIST SARD Juliet 1.3 CWE89_SQL_Injection StringBuilder-assembled query
+cmdi-java-processbuilder-concat,CWE-78,java,shell,True,abstain,True,command-injection-process-builder,B,abstain,sink_not_found,True,,0.0017,0,True,True,NIST SARD Juliet 1.3 CWE78_OS_Command_Injection__... ProcessBuilder
+cmdi-java-list-safe,CWE-78,java,shell,False,clean,False,,A,clean,no_sink_found,True,,0.0004,0,True,True,ProcessBuilder argument-vector idiom (negative control)
+ldapi-java-dircontext-concat,CWE-90,java,ldap,True,abstain,True,ldap-injection,G,patched,,False,compile,2.028,0,True,False,NIST SARD Juliet 1.3 CWE90_LDAP_Injection__... DirContext.search
+xpathi-java-evaluate-concat,CWE-643,java,xpath,True,abstain,True,xpath-injection,D,abstain,"xpath_parse:expected ']', got _T(kind='NAME', text='and')",True,,0.0024,0,True,True,NIST SARD Juliet 1.3 CWE643_Xpath_Injection__... XPath.evaluate
+xpathi-java-constant-safe,CWE-643,java,xpath,False,clean,False,,A,clean,no_sink_found,True,,0.0008,0,True,True,constant XPath with no tainted concatenation (negative control)
