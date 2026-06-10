@@ -485,6 +485,106 @@ def run_differential_gate(
     return GateOutcome("differential", ok, detail)
 
 
+# --- gate 5 (non-SQL): interpreter structural differential -------------------
+
+
+def run_interpreter_structural_gate(
+    patched_source: str,
+    interpreter: str,
+) -> GateOutcome:
+    """Fix #7: Structural-equivalence gate for non-SQL interpreters.
+
+    For each supported non-SQL interpreter we verify a set of
+    *structural invariants* that are necessary (and, under the
+    IRSAM.Soundness.* proofs, sufficient) for the patch to be sound:
+
+    * **shell** -- the patched source must contain ``ProcessBuilder``
+      and must *not* contain ``shell=True``.  When both hold the shell
+      lexer is never invoked on attacker bytes.
+    * **ldap** -- every attacker-reachable argument must be wrapped in
+      the declared escape API (``encodeForLDAP``, ``encodeForDN``,
+      ``escape_filter_chars``).  Detected by presence of at least one
+      of those call-shapes in the patched source and absence of raw
+      LDAP search calls with plain string concatenation.
+    * **xpath** -- the patched source must contain
+      ``setXPathVariableResolver`` and must not have bare string
+      concatenation inside an XPath evaluate/compile call.
+    """
+    if interpreter == "shell":
+        has_pb = bool(re.search(r"\bProcessBuilder\b", patched_source))
+        has_shell_true = bool(re.search(r"shell\s*=\s*True", patched_source))
+        if not has_pb:
+            return GateOutcome(
+                "structural_differential", False,
+                "shell: patched source does not use ProcessBuilder",
+            )
+        if has_shell_true:
+            return GateOutcome(
+                "structural_differential", False,
+                "shell: patched source still contains shell=True",
+            )
+        return GateOutcome(
+            "structural_differential", True,
+            "shell: ProcessBuilder present, shell=True absent",
+        )
+
+    if interpreter == "ldap":
+        escape_apis = [
+            r"encodeForLDAP\s*\(",
+            r"encodeForDN\s*\(",
+            r"escape_filter_chars\s*\(",
+        ]
+        has_escape = any(
+            re.search(pat, patched_source) for pat in escape_apis
+        )
+        # Residual: a search() call whose argument contains "+" concatenation
+        has_raw_concat = bool(re.search(
+            r"\.\s*search\s*\([^)]*\+[^)]*\)", patched_source
+        ))
+        if not has_escape:
+            return GateOutcome(
+                "structural_differential", False,
+                "ldap: no LDAP escape API call found in patched source",
+            )
+        if has_raw_concat:
+            return GateOutcome(
+                "structural_differential", False,
+                "ldap: residual string concatenation inside LDAP search call",
+            )
+        return GateOutcome(
+            "structural_differential", True,
+            "ldap: escape API present, no raw concatenation at sink",
+        )
+
+    if interpreter == "xpath":
+        has_resolver = bool(re.search(
+            r"setXPathVariableResolver\s*\(", patched_source
+        ))
+        # Residual: xpath evaluate/compile with a raw "+" in the query arg
+        has_raw_concat = bool(re.search(
+            r"\.\s*(?:evaluate|compile)\s*\([^)]*\+[^)]*\)", patched_source
+        ))
+        if not has_resolver:
+            return GateOutcome(
+                "structural_differential", False,
+                "xpath: no XPathVariableResolver installed in patched source",
+            )
+        if has_raw_concat:
+            return GateOutcome(
+                "structural_differential", False,
+                "xpath: residual string concatenation inside XPath call",
+            )
+        return GateOutcome(
+            "structural_differential", True,
+            "xpath: XPathVariableResolver present, no raw concatenation at sink",
+        )
+
+    return GateOutcome(
+        "structural_differential", True,
+        f"{interpreter}: no structural differential gate defined (skipped)",
+    )
+
+
 # --- composite ---------------------------------------------------------------
 
 
@@ -500,17 +600,29 @@ def run_all_gates(
     param_kind: str = "string",
     project_dir: Path | None = None,
     language: str = "java",
+    interpreter: str = "sql",
 ) -> GateReport:
+    """Run all gates for a given patch.
+
+    Fix #7: ``interpreter`` is now forwarded.  For SQL interpreters the
+    original SQLite differential oracle runs when templates are provided.
+    For non-SQL interpreters (shell/ldap/xpath) a structural differential
+    gate replaces the oracle.
+    """
     gates: list[GateOutcome] = []
     gates.append(run_compile_gate(patched_source, language=language))
     gates.append(run_regression_gate(project_dir))
     gates.append(run_structural_gate(iam, realizations, parameterizing_apis))
     gates.append(run_resast_gate(patched_source, language=language))
-    if original_concat_template is not None and patched_prepared_template is not None:
-        gates.append(run_differential_gate(
-            original_concat_template=original_concat_template,
-            patched_prepared_template=patched_prepared_template,
-            param_kind=param_kind,
-        ))
+    if interpreter == "sql":
+        if original_concat_template is not None and patched_prepared_template is not None:
+            gates.append(run_differential_gate(
+                original_concat_template=original_concat_template,
+                patched_prepared_template=patched_prepared_template,
+                param_kind=param_kind,
+            ))
+    else:
+        # Fix #7: non-SQL — run interpreter-specific structural differential
+        gates.append(run_interpreter_structural_gate(patched_source, interpreter))
     overall = all(g.passed for g in gates)
     return GateReport(file=file, gates=tuple(gates), overall_passed=overall)

@@ -25,7 +25,7 @@ Detector = Literal["codeql", "semgrep", "sonarqube", "joern", "other"]
 Interpreter = Literal[
     "sql", "shell", "html-dom", "ldap", "xpath", "template", "path", "xml", "other"
 ]
-Language = Literal["java", "python"]
+Language = Literal["java"]
 Severity = Literal["info", "low", "medium", "high", "critical"]
 
 

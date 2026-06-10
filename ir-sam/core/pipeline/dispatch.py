@@ -156,20 +156,7 @@ def _register_defaults() -> None:
     ))
 
 
-# LDAP filter argument index by sink method.
-_LDAP_FILTER_ARG = {"search": 1, "search_s": 2, "search_ext_s": 2}
 
-
-def _py_ldap_slice(src: str, sink_line: int) -> SliceResult | SliceAbstention:
-    """Slice the *filter* argument of an LDAP search sink (not arg 0)."""
-    from core.lang.python import find_sink_calls, slice_sink_argument
-
-    arg_idx = 1
-    for line, _recv, api, _text in find_sink_calls(src):
-        if line == sink_line:
-            arg_idx = _LDAP_FILTER_ARG.get(api, 1)
-            break
-    return slice_sink_argument(src, sink_line, arg_index=arg_idx)
 
 
 _register_defaults()

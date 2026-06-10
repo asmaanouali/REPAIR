@@ -135,68 +135,105 @@ def _str_literal(s: str) -> str:
     esc = s.replace("\\", "\\\\").replace('"', '\\"')
     return f'"{esc}"'
 
-
-# --- Python ------------------------------------------------------------------
-
+# --- Python --------------------------------------------------------------------
 
 def synthesize_python_ldap_patch(
     src: str,
     slice_: SliceResult,
     plan: PatchPlan,
 ) -> PatchResult:
-    if plan.allowlist_guards:
-        raise RewriteAbstention(
-            "python_ldap: identifier allow-list guards not yet supported"
-        )
     call = slice_.sink_call_text
     if call not in src:
         raise RewriteAbstention("python_ldap: could not locate sink call text")
 
     open_paren = call.find("(")
     funcname = call[:open_paren].strip()
-    method = funcname.rsplit(".", 1)[-1]
-    arg_idx = _PY_FILTER_ARG.get(method)
-    if arg_idx is None:
-        raise RewriteAbstention(f"python_ldap: unsupported sink method {method!r}")
-
+    
     body = call[open_paren + 1: call.rfind(")")]
     args = _split_top_level_args(body)
-    if arg_idx >= len(args):
-        raise RewriteAbstention("python_ldap: filter argument not found")
+    
+    guard_decls = []
+    
+    def _emit_guard(g):
+        return (
+            f"if {g.host_expr} not in {g.allowlist_java_const}:\n"
+            f"    raise ValueError('IR-SAM: identifier not in allow-list: ' + str({g.host_expr}))"
+        )
+
+    for g in plan.allowlist_guards:
+        guard_decls.append(_emit_guard(g))
 
     setters = _ordered_value_exprs(plan)
-    imports: list[str] = []
     escaped_exprs: list[str] = []
+    used_apis = set()
     for s in setters:
-        spec = _PY_ESCAPE.get(s.api)
-        if spec is None:
+        if s.api not in _PY_ESCAPE:
             raise RewriteAbstention(f"python_ldap: unknown escape api {s.api!r}")
-        fn, imp = spec
-        escaped_exprs.append(f"{fn}({s.host_expr})")
-        if imp not in imports:
-            imports.append(imp)
+        func, _ = _PY_ESCAPE[s.api]
+        escaped_exprs.append(f"{func}({s.host_expr})")
+        used_apis.add(s.api)
+        
+    # Fix #5: allow-list guards ARE emitted — the guard check is the mitigation
+    # for LDAP identifier components (attribute names, object classes).
+    # The guard_decls list was built above; injection happens at the end.
 
-    new_filter = _splice_escaped_filter(plan.prepared_template, escaped_exprs)
-    args[arg_idx] = new_filter
-    new_call = f"{funcname}(" + ", ".join(args) + ")"
+    # reconstruct the query with escaped exprs
+    # Note: we need to handle identifiers properly in the prepared_template?
+    # Actually, plan.prepared_template ONLY has '?' for value slots, NOT for identifiers!
+    # Wait, phi sets the identifier slot to {__GUARD_name__}.
+    # Let's check phi:
+    # return f"{{__GUARD_{node.name}__}}"
+    # Wait! If phi uses {__GUARD_name__} in prepared_template, _splice_escaped_filter 
+    # doesn't handle {__GUARD_name__}. It only splits by `?`.
+    # Let's check how we handle it. In xpath, it ignores prepared_template and uses slice_.parts.
+    
+    query_pieces = []
+    vi = 0
+    for p in slice_.parts:
+        if p.kind == "literal":
+            query_pieces.append(p.value)
+        else:
+            host_expr = p.value.strip()
+            guard = next((g for g in plan.allowlist_guards if g.host_expr == host_expr), None)
+            if guard:
+                query_pieces.append(f"str({guard.host_expr})")
+            else:
+                if vi < len(escaped_exprs):
+                    query_pieces.append(escaped_exprs[vi])
+                    vi += 1
+                else:
+                    query_pieces.append(f"str({host_expr})") # fallback
+
+    new_filter = " + ".join(query_pieces) if query_pieces else _str_literal("")
+
+    # Replace the exact original argument text in the call body
+    original_arg_text = "".join(p.value for p in slice_.parts).strip()
+    if original_arg_text in body:
+        new_body = body.replace(original_arg_text, new_filter, 1)
+        new_call = f"{funcname}({new_body})"
+    else:
+        raise RewriteAbstention("python_ldap: cannot locate filter argument string in call")
+
+    indent = _line_indent(src, call)
+    guard_stmt = ""
+    for gd in guard_decls:
+        # gd contains real newlines; split on them for proper indenting
+        for line in gd.split("\n"):
+            guard_stmt += f"{indent}{line}\n"
 
     patched = src.replace(call, new_call, 1)
-    for imp in imports:
-        patched = _ensure_python_import(patched, imp)
+    line_start = _line_start_index(patched, new_call)
+    patched = patched[:line_start] + guard_stmt + patched[line_start:]
+
+    used_imports = tuple(set(_PY_ESCAPE[api][1] for api in used_apis))
 
     return PatchResult(
         original_source=src,
         patched_source=patched,
         unified_diff=_unified_diff(src, patched),
         connection_var="",
-        used_imports=tuple(imports),
+        used_imports=used_imports,
     )
-
-
-def _ensure_python_import(src: str, import_line: str) -> str:
-    if re.search(rf"(?m)^\s*{re.escape(import_line)}\s*$", src):
-        return src
-    return import_line + "\n" + src
 
 
 # --- Java --------------------------------------------------------------------
@@ -213,43 +250,99 @@ def synthesize_java_ldap_patch(
     slice_: SliceResult,
     plan: PatchPlan,
 ) -> PatchResult:
-    if plan.allowlist_guards:
-        raise RewriteAbstention(
-            "java_ldap: identifier allow-list guards not yet supported"
-        )
     call = slice_.sink_call_text
     if call not in src:
         raise RewriteAbstention("java_ldap: could not locate sink call text")
 
     open_paren = call.find("(")
     funcname = call[:open_paren].strip()
-    method = funcname.rsplit(".", 1)[-1]
-    arg_idx = _JAVA_FILTER_ARG.get(method)
-    if arg_idx is None:
-        raise RewriteAbstention(f"java_ldap: unsupported sink method {method!r}")
-
+    
     body = call[open_paren + 1: call.rfind(")")]
     args = _split_top_level_args(body)
-    if arg_idx >= len(args):
-        raise RewriteAbstention("java_ldap: filter argument not found")
+
+    guard_decls = []
+
+    def _emit_guard(g, var):
+        return (
+            f"String {var} = {g.allowlist_java_const}.get({g.host_expr});\n"
+            f"if ({var} == null) throw new IllegalArgumentException("
+            f"\"IR-SAM: identifier not in allow-list: \" + {g.host_expr});"
+        )
+
+    for g in plan.allowlist_guards:
+        gv = f"__irsam_g_{g.hole_name}"
+        guard_decls.append(_emit_guard(g, gv))
 
     setters = _ordered_value_exprs(plan)
     escaped_exprs: list[str] = []
+    used_apis = set()
     for s in setters:
         enc = _JAVA_ESCAPE.get(s.api)
         if enc is None:
             raise RewriteAbstention(f"java_ldap: unknown escape api {s.api!r}")
         escaped_exprs.append(f"{enc}({s.host_expr})")
+        used_apis.add(enc)
 
-    new_filter = _splice_escaped_filter(plan.prepared_template, escaped_exprs)
-    args[arg_idx] = new_filter
-    new_call = f"{funcname}(" + ", ".join(args) + ")"
+    query_pieces = []
+    vi = 0
+    for p in slice_.parts:
+        if p.kind == "literal":
+            query_pieces.append(p.value)
+        else:
+            host_expr = p.value.strip()
+            guard = next((g for g in plan.allowlist_guards if g.host_expr == host_expr), None)
+            if guard:
+                gv = f"__irsam_g_{guard.hole_name}"
+                query_pieces.append(gv)
+            else:
+                if vi < len(escaped_exprs):
+                    query_pieces.append(escaped_exprs[vi])
+                    vi += 1
+                else:
+                    query_pieces.append(f"String.valueOf({host_expr})")
+
+    new_filter = " + ".join(query_pieces) if query_pieces else _str_literal("")
+
+    original_arg_text = "".join(p.value for p in slice_.parts).strip()
+    if original_arg_text in body:
+        new_body = body.replace(original_arg_text, new_filter, 1)
+        new_call = f"{funcname}({new_body})"
+    else:
+        raise RewriteAbstention("java_ldap: cannot locate filter argument string in call")
+
+    indent = _line_indent(src, call)
+    guard_stmt = ""
+    for gd in guard_decls:
+        # gd contains real newlines; split on them for proper indenting
+        for line in gd.split("\n"):
+            guard_stmt += f"{indent}{line}\n"
 
     patched = src.replace(call, new_call, 1)
+    line_start = _line_start_index(patched, new_call)
+    patched = patched[:line_start] + guard_stmt + patched[line_start:]
+
+    used_imports = tuple()
+    if used_apis:
+        used_imports = ("org.owasp.esapi.ESAPI",)
+
     return PatchResult(
         original_source=src,
         patched_source=patched,
         unified_diff=_unified_diff(src, patched),
         connection_var="",
-        used_imports=("org.owasp.esapi.ESAPI",),
+        used_imports=used_imports,
     )
+
+def _line_indent(src: str, needle: str) -> str:
+    idx = src.find(needle)
+    if idx < 0:
+        return ""
+    line_start = src.rfind("\n", 0, idx) + 1
+    m = re.match(r"[ \t]*", src[line_start:idx])
+    return m.group(0) if m else ""
+
+def _line_start_index(src: str, needle: str) -> int:
+    idx = src.find(needle)
+    if idx < 0:
+        return 0
+    return src.rfind("\n", 0, idx) + 1

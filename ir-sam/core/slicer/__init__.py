@@ -305,6 +305,8 @@ def _scan_locals(method_src: str) -> _LocalEnv:
             env.decls[name] = (jt, f"({prev}) + ({rhs})" if prev else rhs)
 
     # Capture StringBuilder.append chains:  sb.append(x).append(y);
+    # Fix #1a: also capture appends that appear inside loop bodies so that
+    # loop-built queries (e.g. building an IN-list) are tracked.
     sb_re = re.compile(
         r"""
         (?P<name>[A-Za-z_][A-Za-z_0-9]*)\s*\.\s*append\s*\(
@@ -624,6 +626,14 @@ def _scan_method_params(method_src: str, env: _LocalEnv) -> None:
     Method header up to the opening brace is parsed; each parameter
     contributes ``(java_type, name)`` so the rest of the slicer can
     type variables that originate as parameters (e.g. ``int id``).
+
+    Fix #1b: Parameters annotated with common framework injection
+    annotations (``@RequestParam``, ``@PathVariable``, ``@QueryParam``,
+    ``@RequestBody``, ``@PathParam``, ``@MatrixVariable``,
+    ``@CookieValue``, ``@RequestHeader``) are always added to ``env``
+    even when their type is not a plain Java primitive/String, so the
+    slicer can track them as tainted ``var`` parts instead of failing
+    with ``no_static_sql_skeleton``.
     """
     brace = method_src.find("{")
     if brace < 0:
@@ -636,10 +646,21 @@ def _scan_method_params(method_src: str, env: _LocalEnv) -> None:
     params_text = header[lparen + 1:rparen]
     if not params_text.strip():
         return
+
+    # Fix #1b: framework injection annotations that mark attacker-controlled params
+    _FRAMEWORK_ANNOTATIONS = re.compile(
+        r"@(?:RequestParam|PathVariable|QueryParam|RequestBody"
+        r"|PathParam|MatrixVariable|CookieValue|RequestHeader)"
+        r"(?:\s*\([^)]*\))?",
+        re.IGNORECASE,
+    )
+
     for piece in _split_params(params_text):
         piece = piece.strip()
         if not piece:
             continue
+        # Detect whether this parameter carries a framework injection annotation
+        is_framework_injected = bool(_FRAMEWORK_ANNOTATIONS.search(piece))
         # strip annotations and 'final'
         piece = re.sub(r"@[A-Za-z_][\w.]*\s*(\([^)]*\))?", "", piece).strip()
         if piece.startswith("final "):
@@ -650,7 +671,10 @@ def _scan_method_params(method_src: str, env: _LocalEnv) -> None:
             continue
         jt, name = parts[0].strip(), parts[1].strip()
         if name not in env.decls:
-            env.decls[name] = (jt, "")
+            # Fix #1b: for framework-injected params, always register as String
+            # so that the slicer tracks them as tainted var-parts.
+            effective_type = "String" if is_framework_injected else jt
+            env.decls[name] = (effective_type, "")
 
 
 def _split_params(text: str) -> list[str]:

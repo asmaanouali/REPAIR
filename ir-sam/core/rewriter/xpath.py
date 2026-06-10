@@ -104,59 +104,7 @@ def _build_var_query(slice_: SliceResult) -> tuple[str, int]:
     return query, vi
 
 
-# --- Python ------------------------------------------------------------------
 
-
-def synthesize_python_xpath_patch(
-    src: str,
-    slice_: SliceResult,
-    plan: PatchPlan,
-) -> PatchResult:
-    if plan.allowlist_guards:
-        raise RewriteAbstention(
-            "python_xpath: identifier allow-list guards not supported"
-        )
-    call = slice_.sink_call_text
-    if call not in src:
-        raise RewriteAbstention("python_xpath: could not locate sink call text")
-
-    open_paren = call.find("(")
-    funcname = call[:open_paren].strip()
-    method = funcname.rsplit(".", 1)[-1]
-    if method != "xpath":
-        raise RewriteAbstention(
-            f"python_xpath: only Element.xpath() is supported, got {method!r}"
-        )
-
-    body = call[open_paren + 1: call.rfind(")")]
-    args = _split_top_level_args(body)
-    if not args:
-        raise RewriteAbstention("python_xpath: no query argument")
-
-    query, n_vars = _build_var_query(slice_)
-    setters = _ordered_value_exprs(plan)
-    if n_vars != len(setters):
-        raise RewriteAbstention(
-            f"python_xpath: variable/value count mismatch "
-            f"({n_vars} vars, {len(setters)} values)"
-        )
-
-    kwargs = [f"v{i}={s.host_expr}" for i, s in enumerate(setters)]
-    new_args = [_py_str_literal(query)] + args[1:] + kwargs
-    new_call = f"{funcname}(" + ", ".join(new_args) + ")"
-
-    patched = src.replace(call, new_call, 1)
-    return PatchResult(
-        original_source=src,
-        patched_source=patched,
-        unified_diff=_unified_diff(src, patched),
-        connection_var="",
-        used_imports=(),
-    )
-
-
-def _py_str_literal(s: str) -> str:
-    return repr(s)
 
 
 # --- Java --------------------------------------------------------------------
@@ -167,45 +115,76 @@ def synthesize_java_xpath_patch(
     slice_: SliceResult,
     plan: PatchPlan,
 ) -> PatchResult:
-    if plan.allowlist_guards:
-        raise RewriteAbstention(
-            "java_xpath: identifier allow-list guards not supported"
-        )
     call = slice_.sink_call_text
     if call not in src:
         raise RewriteAbstention("java_xpath: could not locate sink call text")
 
     open_paren = call.find("(")
     funcname = call[:open_paren].strip()
-    method = funcname.rsplit(".", 1)[-1]
-    if method not in ("evaluate", "compile"):
-        raise RewriteAbstention(
-            f"java_xpath: only XPath.evaluate/compile supported, got {method!r}"
-        )
+    
     receiver = funcname.rsplit(".", 1)[0]
     if not receiver:
-        raise RewriteAbstention("java_xpath: cannot determine XPath receiver")
+        # If no receiver, fallback to assuming there's an `xpath` object in scope.
+        receiver = "xpath"
 
     body = call[open_paren + 1: call.rfind(")")]
     args = _split_top_level_args(body)
     if not args:
         raise RewriteAbstention("java_xpath: no query argument")
 
-    query, n_vars = _build_var_query(slice_)
-    setters = _ordered_value_exprs(plan)
-    if n_vars != len(setters):
-        raise RewriteAbstention(
-            f"java_xpath: variable/value count mismatch "
-            f"({n_vars} vars, {len(setters)} values)"
+    query_pieces = []
+    guard_decls = []
+    bound_vars = []
+
+    def _emit_guard(g, var):
+        return (
+            f"String {var} = {g.allowlist_java_const}.get({g.host_expr});\n"
+            f"if ({var} == null) throw new IllegalArgumentException("
+            f"\"IR-SAM: identifier not in allow-list: \" + {g.host_expr});"
         )
 
+    vi = 0
+    for p in slice_.parts:
+        if p.kind == "literal":
+            query_pieces.append(p.value)
+        else:
+            host_expr = p.value.strip()
+            guard = next((g for g in plan.allowlist_guards if g.host_expr == host_expr), None)
+            if guard:
+                gv = f"__irsam_g_{guard.hole_name}"
+                guard_decls.append(_emit_guard(guard, gv))
+                query_pieces.append('" + ' + gv + ' + "')
+            else:
+                query_pieces.append(f"$v{vi}")
+                bound_vars.append(host_expr)
+                vi += 1
+
+    query = "".join(query_pieces)
+    query = re.sub(r"'(\$v\d+)'", r"\1", query)
+    query = re.sub(r'"(\$v\d+)"', r"\1", query)
+
+    # We assume the query is the first argument
     args[0] = _java_str_literal(query)
+    
+    # If the string literal ends up with `" + __irsam_g_foo + "`, we need to normalize quotes if we wrapped it
+    # _java_str_literal escapes the internal quotes, so `" + gv + "` becomes `\" + gv + \"`
+    # We should fix the Java concatenation.
+    new_arg = _java_str_literal(query)
+    # un-escape the guards to allow concatenation
+    new_arg = new_arg.replace('\\" + __irsam_g_', '" + __irsam_g_')
+    new_arg = new_arg.replace(' + \\"', ' + "')
+    
+    args[0] = new_arg
     new_call = f"{funcname}(" + ", ".join(args) + ")"
 
     # Build a nested-ternary XPathVariableResolver lambda binding each $vN.
-    resolver = _build_java_resolver(setters)
+    resolver = _build_java_resolver(bound_vars)
     indent = _line_indent(src, call)
-    resolver_stmt = f"{indent}{receiver}.setXPathVariableResolver({resolver});\n"
+    
+    resolver_stmt = ""
+    for gd in guard_decls:
+        resolver_stmt += f"{indent}{gd}\n"
+    resolver_stmt += f"{indent}{receiver}.setXPathVariableResolver({resolver});\n"
 
     # Insert the resolver statement on its own line immediately before the
     # line that contains the sink call.
@@ -222,12 +201,12 @@ def synthesize_java_xpath_patch(
     )
 
 
-def _build_java_resolver(setters: list[SetterCall]) -> str:
+def _build_java_resolver(bound_vars: list[str]) -> str:
     # __vn -> "v0".equals(__vn.getLocalPart()) ? (Object) host0
     #       : "v1".equals(__vn.getLocalPart()) ? (Object) host1 : null
     chain = "null"
-    for i in reversed(range(len(setters))):
-        host = setters[i].host_expr
+    for i in reversed(range(len(bound_vars))):
+        host = bound_vars[i]
         chain = (f'"v{i}".equals(__vn.getLocalPart()) ? (Object) ({host}) '
                  f': {chain}')
     return f"__vn -> {chain}"
