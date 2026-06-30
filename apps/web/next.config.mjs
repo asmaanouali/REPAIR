@@ -2,11 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: { typedRoutes: false },
-  async rewrites() {
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
-    return [
-      { source: "/api/:path*", destination: `${apiBase}/:path*` },
-    ];
-  },
+  // API proxying is handled at runtime by src/app/api/[...path]/route.ts
+  // which reads API_INTERNAL_BASE at request time (works correctly in Docker).
 };
 export default nextConfig;
+

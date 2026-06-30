@@ -1,17 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import {
-  ShieldCheck, Activity, FolderGit2, AlertTriangle, GitPullRequest,
-  ArrowUpRight, Sparkles,
+  ShieldCheck, Activity, AlertTriangle, GitPullRequest,
+  Sparkles,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge, StatusDot } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { api, type Project } from "@/lib/api";
-import { relativeTime } from "@/lib/utils";
 
 function Stat({
   icon: Icon, label, value, hint, tone = "primary",
@@ -40,7 +36,8 @@ function Stat({
 }
 
 export default function DashboardPage() {
-  const projects = useQuery({ queryKey: ["projects"], queryFn: () => api.get<Project[]>("/projects") });
+  // Projects feature hidden for demo — not in scope for this defense
+  // const projects = useQuery({ queryKey: ["projects"], queryFn: () => api.get<Project[]>("/projects") });
 
   return (
     <div className="space-y-8">
@@ -52,59 +49,19 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button asChild variant="outline"><Link href="/quickfix"><Sparkles className="h-4 w-4" />Quickfix</Link></Button>
-          <Button asChild><Link href="/projects">View projects<ArrowUpRight className="h-4 w-4" /></Link></Button>
+          <Button asChild><Link href="/quickfix"><Sparkles className="h-4 w-4" />Open Quickfix</Link></Button>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat icon={FolderGit2} label="Projects" value={projects.data?.length ?? "—"} hint="active workspaces" tone="primary" />
-        <Stat icon={Activity}   label="Scans (24h)" value="0" hint="awaiting first scan" tone="violet" />
-        <Stat icon={AlertTriangle} label="Open findings" value="0" tone="warn" />
-        <Stat icon={GitPullRequest} label="PRs opened" value="0" hint="provable patches merged" tone="success" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Projects stat hidden for demo */}
+        <Stat icon={Activity}      label="Scans (24h)"   value="0" hint="awaiting first scan"      tone="violet" />
+        <Stat icon={AlertTriangle} label="Open findings" value="0" hint="run a scan to populate"  tone="warn" />
+        <Stat icon={GitPullRequest} label="Patches certified" value="0" hint="provable patches merged" tone="success" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Recent projects</CardTitle>
-              <Button asChild size="sm" variant="ghost"><Link href="/projects">See all</Link></Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {projects.isLoading ? (
-              <div className="space-y-3">
-                {[0,1,2].map(i => <Skeleton key={i} className="h-12 w-full" />)}
-              </div>
-            ) : (projects.data ?? []).length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border p-8 text-center">
-                <FolderGit2 className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="mt-3 text-sm text-muted-foreground">No projects yet.</p>
-                <Button asChild className="mt-4"><Link href="/projects">Create one</Link></Button>
-              </div>
-            ) : (
-              <ul className="divide-y divide-border/70">
-                {projects.data!.slice(0, 6).map(p => (
-                  <li key={p.id} className="group flex items-center justify-between py-3">
-                    <Link href={`/projects/${p.id}`} className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-primary/30 to-secondary/30">
-                        <FolderGit2 className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium group-hover:text-primary">{p.name}</div>
-                        <div className="truncate text-xs text-muted-foreground">
-                          {p.source_type}{p.git_url ? ` · ${p.git_url}` : ""}
-                        </div>
-                      </div>
-                    </Link>
-                    <div className="text-xs text-muted-foreground">{relativeTime(p.created_at)}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
+        {/* Recent projects panel hidden for demo */}
 
         <Card>
           <CardHeader>

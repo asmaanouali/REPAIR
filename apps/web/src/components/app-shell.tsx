@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  ShieldCheck, LayoutDashboard, FolderGit2, Wand2, Settings,
+  ShieldCheck, LayoutDashboard, Wand2, Settings,
   LogOut, Search, Bell, ChevronRight,
 } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/projects",  label: "Projects",  icon: FolderGit2 },
+  // { href: "/projects",  label: "Projects",  icon: FolderGit2 }, // hidden for demo
   { href: "/quickfix",  label: "Quickfix",  icon: Wand2 },
   { href: "/settings",  label: "Settings",  icon: Settings },
 ];
